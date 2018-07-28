@@ -1,4 +1,4 @@
 # AcademyHourglass
 
 
-## Schedule Generating Software for University Usey
+## Schedule Generating Software for University Use
