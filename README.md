@@ -1,4 +1,2 @@
-# AcademyHourglass
+# Tome
 
-
-## Schedule Generating Software for University Use
