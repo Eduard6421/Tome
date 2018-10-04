@@ -1,0 +1,37 @@
+
+
+
+#content input[type=text] {
+   font-size: 30px;
+   height: 60px;
+   /*background-color: rgba(255, 255, 255, 0.65) !important;*/
+}
+.search-result-container{
+	padding: 0.01em 70px;
+}
+.search-result{
+	border-bottom: 1px solid black;
+	padding: 0.01em 16px;
+	float: left;
+	width: 83.33333%;
+}
+.search-result h1 {
+    font-weight: 400;
+		margin: 10px 0;
+		display: block;
+    margin-block-start: 1.33em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+}
+.search-result h1 span{
+    font-size: 15px!important;
+}
+
+.search-result p {
+	display: block;
+	margin-block-end: 1em;
+	margin-inline-start: 0px;
+	margin-inline-end: 0px;
+	margin-left: 1.33em;
+	word-wrap: break-word
+}
