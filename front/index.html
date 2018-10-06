@@ -1,323 +1,162 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <title>Login & Sign Up Form Concept</title>
-
-
-  <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans:400,300'>
-  <link rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons'>
-
-  <link rel="stylesheet" href="css/login.css">
-  <link rel="stylesheet" href="css/search.css">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans:400,300'>
+    <link rel='stylesheet' href='https://fonts.googleapis.com/icon?family=Material+Icons'>
+    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="css/search.css">
     <link rel="stylesheet" href="css/slider.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.0.0/semantic.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.1/angular-resource.min.js"></script>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+    <script src="js/slider.js"></script>
+    <script src="js/login.js"></script>
 
-
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.1/angular-resource.min.js"></script>
-  <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.0.0/semantic.min.css">
-
-
-
-
-  <!-- Menu Style
-  <link rel="stylesheet" type="text/css" href="css/menu.css">
-  <link rel="stylesheet" type="text/css" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
--->
+    <title>Login & Sign Up Form Concept</title>
 </head>
 
 <body>
-
-
-  <div class="cotn_principal">
-
-
-
-            <div id="container">
-          			<div id="next" alt="Next" title="Next">
-          				<div class="arrow-right"></div>
-          			</div>
-          			<div id="prev" alt="Prev" title="Prev">
-          				<div class="arrow-left"></div>
-          			</div>
-          			<div id="slider">
-          				<div class="slide active">
-          					<div class="slide-copy">
-          						<h2>Slide One</h2>
-          						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vitae commodo sem. Integer eros nibh, molestie congue elementum quis, mattis nec tortor. Vivamus sed hendrerit sed vitae orci convallis.</p>
-          					</div>
-          					<div class="img1"></div>
-          				</div>
-
-          				<div class="slide">
-          					<div class="slide-copy">
-          						<h2>Slide Two</h2>
-          						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vitae commodo sem. Integer eros nibh, molestie congue elementum quis, mattis nec tortor. Vivamus sed hendrerit sed vitae orci convallis.</p>
-          					</div>
-          					<div class="img2"></div>
-          				</div>
-
-          				<div class="slide">
-          					<div class="slide-copy">
-          						<h2>Slide Three</h2>
-          						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vitae commodo sem. Integer eros nibh, molestie congue elementum quis, mattis nec tortor. Vivamus sed hendrerit sed vitae orci convallis.</p>
-          					</div>
-          					<div class="img3"></div>
-          				</div>
-
-          				<div class="slide">
-          					<div class="slide-copy">
-          						<h2>Slide Four</h2>
-          						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vitae commodo sem. Integer eros nibh, molestie congue elementum quis, mattis nec tortor. Vivamus sed hendrerit sed vitae orci convallis.</p>
-          					</div>
-          					<div class="img4"></div>
-          				</div>
-
-          				<div class="slide">
-          					<div class="slide-copy">
-          						<h2>Slide Five</h2>
-          						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vitae commodo sem. Integer eros nibh, molestie congue elementum quis, mattis nec tortor. Vivamus sed hendrerit sed vitae orci convallis.</p>
-          					</div>
-          					<div class="img5"></div>
-          				</div>
-          			</div>
-          		</div>
-
-
-
     <div class="cont_centrar">
-
-
-
-
-      <div class="cont_login">
-        <div class="cont_info_log_sign_up">
-          <div class="col_md_login">
-            <div class="cont_ba_opcitiy">
-              <h2>LOGIN</h2>
-              <p>Aici nimeni nu te judeca.</p>
-              <button class="btn_login" onclick="cambiar_login()">LOGIN</button>
+        <div class="cont_login">
+            <div class="cont_info_log_sign_up">
+                <div class="col_md_login">
+                    <div class="cont_ba_opcitiy">
+                        <h2>LOGIN</h2>
+                        <p>Aici nimeni nu te judeca.</p>
+                        <button class="btn_login" onclick="cambiar_login()" style="background-color:#42607f;">LOGIN</button>
+                    </div>
+                </div>
+                <div class="col_md_sign_up">
+                    <div class="cont_ba_opcitiy">
+                        <h2>SIGN UP</h2>
+                        <p>Instra intr-o lume minunata</p>
+                        <button class="btn_sign_up" onclick="cambiar_sign_up()">SIGN UP</button>
+                    </div>
+                </div>
             </div>
-          </div>
-          <div class="col_md_sign_up">
-            <div class="cont_ba_opcitiy">
-              <h2>SIGN UP</h2>
-              <p>Instra intr-o lume minunata, in care vei gasi, doooar copiiii.</p>
-              <button class="btn_sign_up" onclick="cambiar_sign_up()">SIGN UP</button>
+            <div class="cont_back_info">
+                <div class="cont_img_back_grey">
+                    <img src="https://images.unsplash.com/42/U7Fc1sy5SCUDIu4tlJY3_NY_by_PhilippHenzler_philmotion.de.jpg?ixlib=rb-0.3.5&q=50&fm=jpg&crop=entropy&s=7686972873678f32efaf2cd79671673d" alt="" />
+                </div>
             </div>
-          </div>
+            <div class="cont_forms">
+                <div class="cont_img_back_">
+                    <img src="https://images.unsplash.com/42/U7Fc1sy5SCUDIu4tlJY3_NY_by_PhilippHenzler_philmotion.de.jpg?ixlib=rb-0.3.5&q=50&fm=jpg&crop=entropy&s=7686972873678f32efaf2cd79671673d" alt="" />
 
-
+                </div>
+                <div class="cont_form_login">
+                    <a href="#" onclick="ocultar_login_sign_up()"><i class="material-icons">&#xE5C4;</i></a>
+                    <h2>LOGIN</h2>
+                    <input type="text" placeholder="Email" />
+                    <input type="password" placeholder="Password" />
+                    <button class="btn_login" onclick="cambiar_login()">LOGIN</button>
+                </div>
+                <div class="cont_form_sign_up">
+                    <a href="#" onclick="ocultar_login_sign_up()"><i class="material-icons">&#xE5C4;</i></a>
+                    <h2>SIGN UP</h2>
+                    <input type="text" placeholder="Email" />
+                    <input type="text" placeholder="User" />
+                    <input type="password" placeholder="Password" />
+                    <input type="password" placeholder="Confirm Password" />
+                    <button class="btn_sign_up" onclick="cambiar_sign_up()">SIGN UP</button>
+                </div>
+            </div>
         </div>
-        <div class="cont_back_info">
-           <div class="cont_img_back_grey">
-           <img src="https://images.unsplash.com/42/U7Fc1sy5SCUDIu4tlJY3_NY_by_PhilippHenzler_philmotion.de.jpg?ixlib=rb-0.3.5&q=50&fm=jpg&crop=entropy&s=7686972873678f32efaf2cd79671673d" alt="" />
-           </div>
+    </div>
+
+    <div id='content' class="ui one aligned center page grid" style="min-width: 775px !important;">
+        <div class="ui icon input   " style="margin-top:80px;">
+            <input type="text" placeholder="Search for Tome">
+            <button onclick="alert('AAA')" class="ui teal button" style="background-color:#42607f; font-size:18px;">
+                <p class="search-button">Search</p>
+            </button>
         </div>
+    </div>
 
-
-        <div class="cont_forms" >
-          <div class="cont_img_back_">
-             <img src="https://images.unsplash.com/42/U7Fc1sy5SCUDIu4tlJY3_NY_by_PhilippHenzler_philmotion.de.jpg?ixlib=rb-0.3.5&q=50&fm=jpg&crop=entropy&s=7686972873678f32efaf2cd79671673d" alt="" />
-
-          </div>
-          <div class="cont_form_login">
-            <a href="#" onclick="ocultar_login_sign_up()" ><i class="material-icons">&#xE5C4;</i></a>
-            <h2>LOGIN</h2>
-            <input type="text" placeholder="Email" />
-            <input type="password" placeholder="Password" />
-            <button class="btn_login" onclick="cambiar_login()">LOGIN</button>
-          </div>
-          <div class="cont_form_sign_up">
-            <a href="#" onclick="ocultar_login_sign_up()"><i class="material-icons">&#xE5C4;</i></a>
-            <h2>SIGN UP</h2>
-            <input type="text" placeholder="Email" />
-            <input type="text" placeholder="User" />
-            <input type="password" placeholder="Password" />
-            <input type="password" placeholder="Confirm Password" />
-            <button class="btn_sign_up" onclick="cambiar_sign_up()">SIGN UP</button>
-          </div>
+    <div class="search-result-container">
+        <div class="search-result">
+            <h1>
+                <a>Rachiu</a>
+                <span>(last modified : date)</span>
+            </h1>
+            <p>Rachiu is a romanian popular drink </p>
+            <div class="btn-group search-result-button">
+                <button class="btn btn-primary btx-xs hide-panel">
+                    <div class="search-result-description">
+                        <span class="glyphicon glyphicon-eye-open"> Summary</span>
+                    </div>
+                </button>
+            </div>
         </div>
-      </div>
-
-     </div>
-
-     <!-- Menu begin -->
-<!--
-     <nav class="main-menu">
-        <div>
-             <a class="logo" href="http://startific.com">
-             </a>
-         </div>
-
-         <div class="settings"></div>
-         <div class="scrollbar" id="style-1">
-           <ul>
-               <li>
-                   <a href="http://startific.com">
-                   <i class="fa fa-home fa-lg"></i>
-                   <span class="nav-text">Home</span>
-                   </a>
-               </li>
-               <li>
-                   <a href="http://startific.com">
-                   <i class="fa fa-user fa-lg"></i>
-                   <span class="nav-text">Login</span>
-                   </a>
-               </li>
-               <li>
-                   <a href="http://startific.com">
-                   <i class="fa fa-envelope-o fa-lg"></i>
-                   <span class="nav-text">Contact</span>
-                   </a>
-               </li>
-               </li>
-                   <li class="darkerlishadow">
-                   <a href="http://startific.com">
-                   <i class="fa fa-clock-o fa-lg"></i>
-                   <span class="nav-text">News</span>
-                   </a>
-               </li>
-               <li class="darkerli">
-                   <a href="http://startific.com">
-                   <i class="fa fa-desktop fa-lg"></i>
-                   <span class="nav-text">Technology</span>
-                   </a>
-               </li>
-               <li class="darkerli">
-                   <a href="http://startific.com">
-                   <i class="fa fa-plane fa-lg"></i>
-                   <span class="nav-text">Travel</span>
-                   </a>
-               </li>
-               <li class="darkerli">
-                   <a href="http://startific.com">
-                   <i class="fa fa-shopping-cart"></i>
-                    <span class="nav-text">Shopping</span>
-                   </a>
-               </li>
-               <li class="darkerli">
-                   <a href="http://startific.com">
-                   <i class="fa fa-microphone fa-lg"></i>
-                   <span class="nav-text">Film & Music</span>
-                   </a>
-               </li>
-               <li class="darkerli">
-                   <a href="http://startific.com">
-                   <i class="fa fa-flask fa-lg"></i>
-                   <span class="nav-text">Web Tools</span>
-                   </a>
-               </li>
-               <li class="darkerli">
-                   <a href="http://startific.com">
-                   <i class="fa fa-picture-o fa-lg"></i>
-                   <span class="nav-text">Art & Design</span>
-                   </a>
-               </li>
-               <li class="darkerli">
-                   <a href="http://startific.com">
-                   <i class="fa fa-align-left fa-lg"></i>
-                   <span class="nav-text">Magazines
-                   </span>
-                   </a>
-               </li>
-               <li class="darkerli">
-                   <a href="http://startific.com">
-                   <i class="fa fa-gamepad fa-lg"></i>
-                   <span class="nav-text">Games</span>
-                   </a>
-               </li>
-               <li class="darkerli">
-                   <a href="http://startific.com">
-                   <i class="fa fa-glass fa-lg"></i>
-                   <span class="nav-text">Life & Style
-                   </span>
-                   </a>
-               </li>
-               <li class="darkerlishadowdown">
-                   <a href="http://startific.com">
-                   <i class="fa fa-rocket fa-lg"></i>
-                   <span class="nav-text">Fun</span>
-                   </a>
-               </li>
-             </div>
-            </ul>
-            <ul class="logout">
-                <li>
-                    <a href="http://startific.com">
-                    <i class="fa fa-question-circle fa-lg"></i>
-                    <span class="nav-text">Help</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="http://startific.com">
-                    <i class="fa fa-lightbulb-o fa-lg"></i>
-                    <span class="nav-text">
-                       BLOG
-                    </span>
-                    </a>
-                </li>
-            </ul>
-      </nav>
-
-     <!- Menu end -->
-
-     <div id='content' class="ui one aligned center page grid" style="min-width: 775px !important;">
-         <div class="ui right action left icon input" style="margin-top:80px;">
-             <input type="text" placeholder="Search for Tome">
-             <i class="big icon search"></i>
-             <button onclick="alert('AAA')" class="ui teal right labeled icon button" style="background-color:#26C6DA; font-size:18px;">
-                  <p style="text-align:center;">Search</p>
-             </button>
-       </div>
-     </div>
-
-     <div class="search-result-container">
-       <br><br><br>
 
         <div class="search-result">
-          <h1>
-            TITLE
-            <span>(data time last modification)</span>
-          </h1>
-          <p>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</p>
+            <h1>
+                <a>Mona</a>     
+                <span>(last modified : date)</span>
+            </h1>
+            <p>Mona is a romanian popular drink</p>
+            <div class="btn-group search-result-button">
+                <button class="btn btn-primary btx-xs hide-panel">
+                    <div class="search-result-description">
+                        <span class="glyphicon glyphicon-eye-open"> Summary</span>
+                    </div>
+                </button>
+            </div>
         </div>
         <div class="search-result">
-          <h1>
-            TITLE
-            <span>data time last modification</span>
-          </h1>
-          <p>aaa</p>
+            <h1>
+                <a>BMW</a>
+                <span>(last modified : date)</span>
+            </h1>
+            <p>A popular car in Romania's gypsy community</p>
+            <div class="btn-group search-result-button">
+                <button class="btn btn-primary btx-xs hide-panel">
+                    <div class="search-result-description">
+                        <span class="glyphicon glyphicon-eye-open"> Summary</span>
+                    </div>
+                </button>
+            </div>
         </div>
         <div class="search-result">
-          <h1>
-            TITLE
-            <span>data time last modification</span>
-          </h1>
-          <p>aaa</p>
+            <h1>
+                <a>CSS</a>
+                <span>(last modified : date)</span>
+            </h1>
+            <div class="btn-group search-result-button">
+                <button class="btn btn-primary btx-xs hide-panel">
+                    <div class="search-result-description">
+                        <span class="glyphicon glyphicon-eye-open"> Summary</span>
+                    </div>
+                </button>
+            </div>
+
+            <div class="search-result-summary-container">
+                <div class="tome-summary">
+                    <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus quis placerat turpis. Etiam dignissim fermentum nulla sit amet finibus. Donec at tincidunt purus. In consequat lectus auctor nunc sagittis, a blandit est placerat. Nunc ullamcorper, erat vel porta sagittis, velit odio dictum mi, sit amet semper sapien eros nec nibh. Nullam suscipit mi ac sapien ornare efficitur. Vivamus auctor bibendum pretium. Mauris in pharetra lacus, sit amet pretium ante. Donec nec lorem placerat, tempus odio sed, mattis dui. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus quis placerat turpis. Etiam dignissim fermentum nulla sit amet finibus. Donec at tincidunt purus. In consequat lectus auctor nunc sagittis, a blandit est placerat. Nunc ullamcorper, erat vel porta sagittis, velit odio dictum mi, sit amet semper sapien eros nec nibh. Nullam suscipit mi ac sapien ornare efficitur. Vivamus auctor bibendum pretium. Mauris inpharetra lacus, sit amet pretium ante. Donec nec lorem placerat, tempus odio sed, mattis dui.
+                    </p>
+                </div>
+            </div>
+
         </div>
-
-
-
-     </div>
-     <footer class="footer">
-        <p>Write some footery stuff here</p>
-        <p>The kind that no ones cares about :D</p>
-        <p>The kind of text that is so damn long that your footer height changes on a smaller screen.</p>
-     </footer>
-   </div>
-
-
-
-  </div>
-
-
-  <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
-
-    <script  src="js/slider.js"></script>
-  <script  src="js/login.js"></script>
-
+        <div class="search-result">
+            <h1>
+                <a>Cordinieri</a>
+                <span>(last modified : date)</span>
+            </h1>
+            <p>One of the most dangerous rromani comunities in romania.</p>
+            <div class="btn-group search-result-button">
+                <button class="btn btn-primary btx-xs hide-panel">
+                    <div class="search-result-description">
+                        <span class="glyphicon glyphicon-eye-open"> Summary</span>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
 
 </body>
 
