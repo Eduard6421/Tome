@@ -10,7 +10,7 @@
 	border-color: rgb(97, 118, 150);
 	margin: 3% 2.5% 0 2.5%;
 	box-shadow: 1px 10px 30px -10px rgba(0,0,0,0.5);
-
+	
 }
 	
 
@@ -90,5 +90,6 @@
 	font-family: inherit;
 	text-justify : auto;
 	display:block;
+	padding-bottom: 10px;
 }
 
