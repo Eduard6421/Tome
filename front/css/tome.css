@@ -1,0 +1,17 @@
+.tome 
+{
+	margin-top : 5%;
+	width : 90%;
+	background-color: white;
+	border-style : solid;
+	border-width: 3px;
+	border-color: rgb(97, 118, 150);
+}
+
+.tome article 
+{
+	width : 100%;
+	text-align: justify;
+	font-size: 18px;
+	text-align: start;	
+}

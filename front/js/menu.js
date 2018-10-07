@@ -1,8 +1,10 @@
 
-$( document ).ready( function(){
-$("#leftside-navigation .sub-menu > a").click(function(e) {
-  $("#leftside-navigation ul ul").slideUp(), $(this).next().is(":visible") || $(this).next().slideDown(),
-  e.stopPropagation()
-  
-})
-});		
+window.onload = function () {
+    $("nav").hide();
+	$(".open-nav").click(function() {
+		$("nav").slideToggle();
+		$("nav ul").toggleClass("open");
+		$(".open-nav").toggleClass("close");
+	});
+	console.log('yo');
+};
