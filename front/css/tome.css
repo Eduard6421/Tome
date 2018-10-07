@@ -15,3 +15,46 @@
 	font-size: 18px;
 	text-align: start;	
 }
+
+
+
+.tag-container 
+{
+  width:80%;
+  margin-top: 3%;
+  display: flex;
+  align-items: center;
+
+}
+
+.tag-list 
+{
+	background-color: white;
+	border-color : gray;
+	border-style : solid;
+	border-radius: 20px;
+	padding : 15px 15px 15px 15px;
+	display : flex;
+	list-style:	none;
+}
+
+
+.tag 
+{  
+  background: #47CF73;
+  border-radius: 20px;
+  padding : 15px 20px 15px 20px;
+  font-size: 18px;
+  color : white;
+
+}
+
+
+.tag-input 
+{	
+	border:0;
+	padding-left: 10px;
+	font-weight: 800px;
+	font-size:18px;
+	color:black;
+}
