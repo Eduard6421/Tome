@@ -1,0 +1,126 @@
+.article-container {
+    margin-top: 40px;
+}
+
+.entry {
+    position: relative;
+    width: 300px;
+    height: 200px;
+    background: white;
+    margin: 15px;
+    overflow: hidden;
+    float: left;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+.entry:hover img {
+    right: 0px;
+    top: -5px;
+    -moz-transform: scale(0.9, 0.9);
+    -ms-transform: scale(0.9, 0.9);
+    -webkit-transform: scale(0.9, 0.9);
+    transform: scale(0.9, 0.9);
+}
+
+.entry:hover aside {
+    left: -125px;
+    transition: all 0.75s ease;
+    opacity: 0;
+}
+
+.entry:hover i {
+    left: 110px;
+    opacity: 1;
+    -moz-transform: scale(0.7, 0.7);
+    -ms-transform: scale(0.7, 0.7);
+    -webkit-transform: scale(0.7, 0.7);
+    transform: scale(0.7, 0.7);
+}
+
+.entry i {
+    border-radius: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    width: 80px;
+    height: 80px;
+    display: block;
+    position: absolute;
+    left: 260px;
+    top: 48px;
+    text-align: center;
+    line-height: 72px;
+    color: white;
+    font-family: "effra";
+    font-size: 100px;
+    font-weight: bold;
+    opacity: 0;
+    transition: all 0.5s ease;
+    -moz-transform: scale(1, 1);
+    -ms-transform: scale(1, 1);
+    -webkit-transform: scale(1, 1);
+    transform: scale(1, 1);
+}
+
+.entry i:after {
+    content: '+';
+}
+
+.entry aside {
+    width: 100px;
+    padding: 65px 25px 30px 25px;
+    z-index: 100;
+    position: relative;
+    left: 0px;
+    transition: all 0.5s ease;
+}
+
+.entry strong {
+    font-family: "effra";
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 14px;
+    color: #333;
+}
+
+.entry p {
+    font-family: "Arial";
+    font-size: 13px;
+    margin-top: 20px;
+    color: #888;
+}
+
+.entry a {
+    display: block;
+    width: inherit;
+    height: inherit;
+}
+
+.entry a:hover {
+    cursor: pointer;
+}
+
+.entry a img {
+    position: absolute;
+    top: 0px;
+    right: -125px;
+    width: 100%;
+    transition: all 0.5s ease;
+}
+
+.entry ul {
+    position: absolute;
+    display: inline-table;
+    bottom: -5px;
+    width: inherit;
+}
+
+.entry li {
+    display: inline-block;
+    height: 5px;
+    width: 100px;
+    background-color: red;
+    overflow: hidden;
+    bottom: 0px;
+    position: relative;
+    bottom: 0px;
+}
