@@ -1,0 +1,10 @@
+
+#pagination{
+  display: inline-block;
+  margin-bottom: 1.75em;
+  margin-top: 2em;
+  margin-left: 70%;
+}
+#pagination li{
+  display: inline-block;
+}
