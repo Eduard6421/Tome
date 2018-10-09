@@ -1,0 +1,25 @@
+.ta-editor {
+  min-height: 300px;
+  height: 100% !important;
+  overflow: auto;
+  font-family: inherit;
+  font-size: 100%;
+}
+
+
+
+.ta-root 
+{
+	height: 80%;
+
+
+}
+
+
+.tome-editor 
+{
+	margin-top:5%;
+	width:80% !important;
+	height:80% !important;
+
+}
