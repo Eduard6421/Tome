@@ -21,9 +21,14 @@ namespace Tome.Models
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
+            : base("TomeDB", throwIfV1Schema: false)
         {
         }
+
+        public DbSet<Tome> Tomes { get; set; }
+        public DbSet<Tag> Tags { get; set; }
+        public DbSet<TagReference> TagReferences { get; set; }
+        public DbSet<TomeHistory> TomeHistories { get; set; }
 
         public static ApplicationDbContext Create()
         {

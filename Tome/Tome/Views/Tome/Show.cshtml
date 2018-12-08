@@ -1,0 +1,13 @@
+﻿
+@{
+    ViewBag.Title = "Show";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Show</h2>
+
+
+@foreach (var tome in ViewBag.currentTomeHistory)
+{
+    <h1>@tome.FilePath</h1>
+}
