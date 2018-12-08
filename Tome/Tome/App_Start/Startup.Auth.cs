@@ -1,10 +1,10 @@
-﻿using System;
-using Microsoft.AspNet.Identity;
+﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
-using Microsoft.Owin.Security.Google;
 using Owin;
+using System;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Tome.Models;
 
 namespace Tome
@@ -18,6 +18,10 @@ namespace Tome
             app.CreatePerOwinContext(ApplicationDbContext.Create);
             app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
             app.CreatePerOwinContext<ApplicationSignInManager>(ApplicationSignInManager.Create);
+
+            app.CreatePerOwinContext<ApplicationRoleManager>(ApplicationRoleManager.Create);
+
+            createAdminUserAndApplicationRoles();
 
             // Enable the application to use a cookie to store information for the signed in user
             // and to use a cookie to temporarily store information about a user logging in with a third party login provider
@@ -34,7 +38,7 @@ namespace Tome
                         validateInterval: TimeSpan.FromMinutes(30),
                         regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
                 }
-            });            
+            });
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
             // Enables the application to temporarily store user information when they are verifying the second factor in the two-factor authentication process.
@@ -64,5 +68,46 @@ namespace Tome
             //    ClientSecret = ""
             //});
         }
+
+
+        private void createAdminUserAndApplicationRoles()
+        {
+            ApplicationDbContext context = new ApplicationDbContext();
+            var roleManager = new RoleManager<IdentityRole>(new
+                RoleStore<IdentityRole>(context));
+            var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+
+            // Se adauga rolurile aplicatiei
+            if (!roleManager.RoleExists("Administrator"))
+            {
+                // Se adauga rolul de administrator
+                var role = new IdentityRole();
+                role.Name = "Administrator";
+                roleManager.Create(role);
+                // se adauga utilizatorul administrator
+                var user = new ApplicationUser();
+                user.UserName = "admin@admin.com";
+                user.Email = "admin@admin.com";
+                var adminCreated = UserManager.Create(user, "Administrator");
+                if (adminCreated.Succeeded)
+                {
+                    UserManager.AddToRole(user.Id, "Administrator");
+                }
+            }
+
+            if (!roleManager.RoleExists("Moderator"))
+            {
+                var role = new IdentityRole(); role.Name = "Moderator";
+                roleManager.Create(role);
+            }
+
+            if (!roleManager.RoleExists("User"))
+            {
+                var role = new IdentityRole(); role.Name = "User";
+                roleManager.Create(role);
+            }
+
+        }
+
     }
 }
