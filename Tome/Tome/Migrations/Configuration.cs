@@ -10,7 +10,6 @@ namespace Tome.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
-            ContextKey = "Tome.Models.ApplicationDbContext";
         }
 
         protected override void Seed(Tome.Models.ApplicationDbContext context)

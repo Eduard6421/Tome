@@ -23,9 +23,9 @@ namespace Tome.Controllers
         }
 
         [HttpPost]
-        public ActionResult RevertHistory(int id,DateTime date)
+        public ActionResult RevertHistory(int id,int idHistory)
         {
-
+            
 
 
             return RedirectToAction("Index");

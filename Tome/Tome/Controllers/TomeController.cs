@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -13,7 +14,7 @@ namespace Tome.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        private string BASE_PATH = @"E:\Facultate\Anul III\Tome\Tome\Tome\App_Data\tomes\tomes";
+        private string BASE_PATH = @"C:\Users\Eduard\Desktop\tomes\tomes";
         // GET: Tome
         public ActionResult Index()
         {
@@ -27,6 +28,12 @@ namespace Tome.Controllers
             return View();
         }
 
+
+        /// <summary>
+        ///  Receives an id an return the proper tome
+        /// </summary>
+        /// <param name="id">The id of the tome</param>
+        /// <returns>The tome object</returns>
         [HttpGet]
         public ActionResult Show(int id)
         {
@@ -65,11 +72,20 @@ namespace Tome.Controllers
 
                 TomeHistory tomeHistory = new TomeHistory();
                 tomeHistory.Tome = tome;
-                tomeHistory.FilePath = BASE_PATH + "-" + (User.Identity.GetUserName().IsEmpty() ? "anonymous" : User.Identity.GetUserName()) + "-" + DateTime.Now;
+                tomeHistory.FilePath = BASE_PATH + "-" + (User.Identity.GetUserName().IsEmpty() ? "anonymous" : User.Identity.GetUserName()) + "-" + DateTime.Now.ToString("yyyyMMddHHmmss");
                 tomeHistory.ModificationDate = DateTime.Now;
                 tomeHistory.ApplicationUser = currentUser;
                 db.TomeHistories.Add(tomeHistory);
                 db.SaveChanges();
+
+
+                CurrentVersion currentVersion = new CurrentVersion();
+                currentVersion.TomeHistory = tomeHistory;
+                currentVersion.Tome = tome;
+                db.CurrentVersions.Add(currentVersion);
+                db.SaveChanges();
+
+
 
                 return RedirectToAction("Index");
             }
@@ -88,17 +104,42 @@ namespace Tome.Controllers
             return View();
         }
 
-        public ActionResult Edit(int id,Models.Tome requestTome)
+        public ActionResult Edit(int id,TomeContent tomeContent)
         {
             try
             {
+                string currentUserId = User.Identity.GetUserId();
+                ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
+
                 Models.Tome tome = db.Tomes.Find(id);
+                Models.TomeHistory tomeHistory = new TomeHistory();
                 if (TryUpdateModel(tome))
                 {
                     tome.CreationDate = DateTime.Now;
-                    tome.IsPrivate = requestTome.IsPrivate;
-                    tome.Name = requestTome.Name;
+                    tome.IsPrivate = tomeContent.requestTome.IsPrivate;
+
+                    // register history
+                    tomeHistory.Tome = tome;
+                    tomeHistory.FilePath = BASE_PATH + "-" + (User.Identity.GetUserName().IsEmpty() ? "anonymous" : User.Identity.GetUserName()) + "-" + DateTime.Now.ToString("yyyyMMddHHmmss");
                     
+                    // create file and fill with content
+                    Debug.WriteLine(tomeContent.Content);
+                    Debug.WriteLine(tomeHistory.FilePath);
+                    System.IO.File.WriteAllText(tomeHistory.FilePath, tomeContent.Content);
+
+                    // insert into db
+                    tomeHistory.ModificationDate = DateTime.Now;
+                    tomeHistory.ApplicationUser = currentUser;
+                    db.TomeHistories.Add(tomeHistory);
+                    db.SaveChanges();
+
+
+                    // update curent version
+
+                    var currentVersion = db.CurrentVersions.SingleOrDefault(m => m.Tome.TomeId == id);
+                    currentVersion.TomeHistory = tomeHistory;
+                    db.SaveChanges();
+
                 }
             }
             catch (Exception e)

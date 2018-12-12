@@ -29,6 +29,7 @@ namespace Tome.Models
         public DbSet<Tag> Tags { get; set; }
         public DbSet<TagReference> TagReferences { get; set; }
         public DbSet<TomeHistory> TomeHistories { get; set; }
+        public DbSet<CurrentVersion> CurrentVersions { get; set; }
 
         public static ApplicationDbContext Create()
         {

@@ -202,26 +202,28 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201812081534320_InitialCreate.cs" />
-    <Compile Include="Migrations\201812081534320_InitialCreate.Designer.cs">
-      <DependentUpon>201812081534320_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201812081652080_InitialCreate1.cs" />
-    <Compile Include="Migrations\201812081652080_InitialCreate1.Designer.cs">
-      <DependentUpon>201812081652080_InitialCreate1.cs</DependentUpon>
+    <Compile Include="Migrations\201812121425073_InitialCreate.cs" />
+    <Compile Include="Migrations\201812121425073_InitialCreate.Designer.cs">
+      <DependentUpon>201812121425073_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\CurrentVersion.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Tag.cs" />
     <Compile Include="Models\TagReference.cs" />
     <Compile Include="Models\Tome.cs" />
+    <Compile Include="Models\TomeContent.cs" />
     <Compile Include="Models\TomeHistory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\TomeDB.mdf" />
+    <Content Include="App_Data\TomeDB_log.ldf">
+      <DependentUpon>TomeDB.mdf</DependentUpon>
+    </Content>
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -290,7 +292,7 @@
     <Content Include="Views\History\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
+    <Folder Include="App_Data\tomes\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -306,11 +308,8 @@
     <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201812081534320_InitialCreate.resx">
-      <DependentUpon>201812081534320_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201812081652080_InitialCreate1.resx">
-      <DependentUpon>201812081652080_InitialCreate1.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201812121425073_InitialCreate.resx">
+      <DependentUpon>201812121425073_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

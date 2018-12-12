@@ -17,11 +17,12 @@ namespace Tome.Models
         public DateTime CreationDate { get; set; }
 
         public bool IsPrivate { get; set; } = false;
+        
 
-        [MaxLength(128), ForeignKey("ApplicationUser")]
-        public virtual string UserId { get; set; }
-
+        //[MaxLength(128), ForeignKey("ApplicationUser")]
+        //public virtual string UserId { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
+
 
     }
     

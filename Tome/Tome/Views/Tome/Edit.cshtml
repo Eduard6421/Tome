@@ -1,4 +1,4 @@
-﻿
+﻿@model Tome.Models.TomeContent
 @{
     ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -6,11 +6,22 @@
 
 <h2>Edit</h2>
 
+@Html.BeginForm("Edit", "Tome", FormMethod.Post)
+{
+    @Html.TextAreaFor(m => m.Content)
+    @Html.TextAreaFor(m => m.Title)
+    @Html.CheckBoxFor(m => m.requestTome.IsPrivate)
+    <input type="submit" value="Edit">
+}
 
+
+
+<!--
 <form action="/Tome/Edit" method="post">
-    <label>Name</label>
-    <input type="text" name="Name" value="" />
-    <label>IsPrivate</label>
-    <input type="checkbox" value="true" name="IsPrivate" />
-    <button type="submit">Create</button>
+    <!--numai ownerul
+<label>IsPrivate</label>
+<input type="checkbox" value="true" name="IsPrivate" />
+<textarea name="content"></textarea>
+<button type="submit">Edit</button>
 </form>
+-->
