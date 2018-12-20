@@ -31,6 +31,7 @@ namespace Tome.Models
         public DbSet<TomeHistory> TomeHistories { get; set; }
         public DbSet<CurrentVersion> CurrentVersions { get; set; }
 
+
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();

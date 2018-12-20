@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
@@ -17,6 +18,8 @@ namespace Tome.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+
+        private ApplicationDbContext db = new ApplicationDbContext();
 
         public AccountController()
         {
@@ -60,6 +63,9 @@ namespace Tome.Controllers
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
+
+
+
 
         //
         // POST: /Account/Login
@@ -346,6 +352,47 @@ namespace Tome.Controllers
                     return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = loginInfo.Email });
             }
         }
+
+        public class UserViewModel
+        {
+            public string Username { get; set; }
+            public string Email { get; set; }
+            public string Role { get; set; }
+        }
+        [HttpGet]
+        public ActionResult ListUsers()
+        {
+            string currentUserId = User.Identity.GetUserId();
+            ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
+
+            try
+            {
+
+                var usersWithRoles = (from user in db.Users
+                    from userRole in user.Roles
+                    join role in db.Roles on userRole.RoleId equals
+                        role.Id
+                    select new UserViewModel()
+                    {
+                        Username = user.UserName,
+                        Email = user.Email,
+                        Role = role.Name
+                    }).ToList();
+
+
+                ViewBag.usersWithRoles = usersWithRoles;
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("An error occured: " + e);
+            }
+
+
+            return View();
+
+        }
+
+
 
         //
         // POST: /Account/ExternalLoginConfirmation

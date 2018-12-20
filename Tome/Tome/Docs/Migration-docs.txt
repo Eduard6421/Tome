@@ -1,6 +1,6 @@
 ﻿
 # Migration TomeDbContext
-enable-migrations -contexttypename TomeDbContext -Force
+enable-migrations -contexttypename ApplicationDbContext -Force
 add-migration -ConfigurationTypeName Tome.Migrations.Configuration "InitialCreate"
 update-database -ConfigurationTypeName Tome.Migrations.Configuration
 

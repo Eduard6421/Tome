@@ -290,6 +290,7 @@
     <Content Include="Views\Tome\Edit.cshtml" />
     <Content Include="Views\Tome\Show.cshtml" />
     <Content Include="Views\History\Index.cshtml" />
+    <Content Include="Views\Account\ListUsers.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\tomes\" />
