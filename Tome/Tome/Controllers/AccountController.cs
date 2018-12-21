@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using Tome.Filters;
 using Tome.Models;
 
 namespace Tome.Controllers
@@ -21,11 +23,12 @@ namespace Tome.Controllers
 
         private ApplicationDbContext db = new ApplicationDbContext();
 
+
         public AccountController()
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -37,9 +40,9 @@ namespace Tome.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -89,7 +92,7 @@ namespace Tome.Controllers
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, model.RememberMe });
                 case SignInStatus.Failure:
                 default:
                     ModelState.AddModelError("", "Invalid login attempt.");
@@ -126,7 +129,7 @@ namespace Tome.Controllers
             // If a user enters incorrect codes for a specified amount of time then the user account 
             // will be locked out for a specified amount of time. 
             // You can configure the account lockout settings in IdentityConfig
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent:  model.RememberMe, rememberBrowser: model.RememberBrowser);
+            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -161,7 +164,7 @@ namespace Tome.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                     UserManager.AddToRole(user.Id, "User");
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
@@ -320,7 +323,7 @@ namespace Tome.Controllers
             {
                 return View("Error");
             }
-            return RedirectToAction("VerifyCode", new { Provider = model.SelectedProvider, ReturnUrl = model.ReturnUrl, RememberMe = model.RememberMe });
+            return RedirectToAction("VerifyCode", new { Provider = model.SelectedProvider, model.ReturnUrl, model.RememberMe });
         }
 
         //
@@ -353,31 +356,24 @@ namespace Tome.Controllers
             }
         }
 
-        public class UserViewModel
-        {
-            public string Username { get; set; }
-            public string Email { get; set; }
-            public string Role { get; set; }
-        }
         [HttpGet]
+        [AccessDeniedAuthorize(Roles = "Administrator")]
         public ActionResult ListUsers()
         {
-            string currentUserId = User.Identity.GetUserId();
-            ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
-
             try
             {
 
                 var usersWithRoles = (from user in db.Users
-                    from userRole in user.Roles
-                    join role in db.Roles on userRole.RoleId equals
-                        role.Id
-                    select new UserViewModel()
-                    {
-                        Username = user.UserName,
-                        Email = user.Email,
-                        Role = role.Name
-                    }).ToList();
+                                      from userRole in user.Roles
+                                      join role in db.Roles on userRole.RoleId equals
+                                          role.Id
+                                      select new UserViewModel()
+                                      {
+                                          Id = user.Id,
+                                          Username = user.UserName,
+                                          Email = user.Email,
+                                          Role = role.Name
+                                      }).ToList();
 
 
                 ViewBag.usersWithRoles = usersWithRoles;
@@ -391,6 +387,83 @@ namespace Tome.Controllers
             return View();
 
         }
+
+
+        [HttpGet]
+        [AccessDeniedAuthorize(Roles = "Administrator")]
+        public ActionResult Promote(String id)
+        {
+
+            try
+            {
+                
+                String roleId = (from role in db.Roles
+                                 where role.Name == "Moderator"
+                                 select role.Id).Single();
+
+                var rol = (from roles in db.UserRoles
+                    where roles.UserId == id
+                    select roles).FirstOrDefault();
+
+                Debug.WriteLine(rol.UserId);
+                
+                db.UserRoles.Remove(rol);
+
+                IdentityUserRole identity = new IdentityUserRole {UserId = id, RoleId = roleId};
+
+                db.UserRoles.Add(identity);
+
+                db.SaveChanges();
+
+
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("An error occured: " + e);
+
+            }
+
+            return View();
+        }
+
+        [HttpGet]
+        [AccessDeniedAuthorize(Roles = "Administrator")]
+        public ActionResult Demote(String id)
+        {
+            try
+            {
+
+                String roleId = (from role in db.Roles
+                    where role.Name == "User"
+                    select role.Id).Single();
+
+                var rol = (from roles in db.UserRoles
+                    where roles.UserId == id
+                    select roles).FirstOrDefault();
+
+                Debug.WriteLine(rol.UserId);
+
+                db.UserRoles.Remove(rol);
+
+                IdentityUserRole identity = new IdentityUserRole { UserId = id, RoleId = roleId };
+
+                db.UserRoles.Add(identity);
+
+                db.SaveChanges();
+
+
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("An error occured: " + e);
+
+            }
+
+            return View();
+
+        }
+
+
 
 
 

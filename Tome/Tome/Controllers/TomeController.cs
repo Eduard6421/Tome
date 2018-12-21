@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.WebPages;
 using Microsoft.AspNet.Identity;
+using RTE;
 using Tome.Models;
 
 namespace Tome.Controllers
@@ -14,7 +15,7 @@ namespace Tome.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        private string BASE_PATH = @"C:\Users\Eduard\Desktop\tomes\tomes";
+        private readonly string BASE_PATH = @"C:\Users\Eduard\Desktop\tomes\tomes";
         // GET: Tome
         public ActionResult Index()
         {
@@ -50,6 +51,12 @@ namespace Tome.Controllers
         [HttpGet]
         public ActionResult Add()
         {
+            Editor Editor1 = new Editor(System.Web.HttpContext.Current, "Editor1");
+            Editor1.LoadFormData("nalapuladetigqan");
+            Editor1.MvcInit();
+            ViewBag.Editor = Editor1.MvcGetString();
+
+
             return View();
         }
 
@@ -70,18 +77,20 @@ namespace Tome.Controllers
 
                 // create init history
 
-                TomeHistory tomeHistory = new TomeHistory();
-                tomeHistory.Tome = tome;
-                tomeHistory.FilePath = BASE_PATH + "-" + (User.Identity.GetUserName().IsEmpty() ? "anonymous" : User.Identity.GetUserName()) + "-" + DateTime.Now.ToString("yyyyMMddHHmmss");
-                tomeHistory.ModificationDate = DateTime.Now;
-                tomeHistory.ApplicationUser = currentUser;
+                TomeHistory tomeHistory = new TomeHistory
+                {
+                    Tome = tome,
+                    FilePath = BASE_PATH + "-" +
+                               (User.Identity.GetUserName().IsEmpty() ? "anonymous" : User.Identity.GetUserName()) +
+                               "-" + DateTime.Now.ToString("yyyyMMddHHmmss"),
+                    ModificationDate = DateTime.Now,
+                    ApplicationUser = currentUser
+                };
                 db.TomeHistories.Add(tomeHistory);
                 db.SaveChanges();
 
 
-                CurrentVersion currentVersion = new CurrentVersion();
-                currentVersion.TomeHistory = tomeHistory;
-                currentVersion.Tome = tome;
+                CurrentVersion currentVersion = new CurrentVersion {TomeHistory = tomeHistory, Tome = tome};
                 db.CurrentVersions.Add(currentVersion);
                 db.SaveChanges();
 
@@ -91,6 +100,7 @@ namespace Tome.Controllers
             }
             catch (Exception e)
             {
+                Debug.WriteLine("An error occured: " + e);
                 return View();
             }
 

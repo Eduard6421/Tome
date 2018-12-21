@@ -21,7 +21,7 @@ namespace Tome
 
             app.CreatePerOwinContext<ApplicationRoleManager>(ApplicationRoleManager.Create);
 
-            createAdminUserAndApplicationRoles();
+            CreateAdminUserAndApplicationRoles();
 
             // Enable the application to use a cookie to store information for the signed in user
             // and to use a cookie to temporarily store information about a user logging in with a third party login provider
@@ -70,7 +70,7 @@ namespace Tome
         }
 
 
-        private void createAdminUserAndApplicationRoles()
+        private void CreateAdminUserAndApplicationRoles()
         {
             ApplicationDbContext context = new ApplicationDbContext();
             var roleManager = new RoleManager<IdentityRole>(new
@@ -81,14 +81,16 @@ namespace Tome
             if (!roleManager.RoleExists("Administrator"))
             {
                 // Se adauga rolul de administrator
-                var role = new IdentityRole();
-                role.Name = "Administrator";
+                var role = new IdentityRole {Name = "Administrator"};
                 roleManager.Create(role);
+                
+               
+
                 // se adauga utilizatorul administrator
-                var user = new ApplicationUser();
-                user.UserName = "admin@admin.com";
-                user.Email = "admin@admin.com";
+                var user = new ApplicationUser {UserName = "admin@admin.com", Email = "admin@admin.com"};
+
                 var adminCreated = UserManager.Create(user, "Administrator");
+
                 if (adminCreated.Succeeded)
                 {
                     UserManager.AddToRole(user.Id, "Administrator");
@@ -97,13 +99,13 @@ namespace Tome
 
             if (!roleManager.RoleExists("Moderator"))
             {
-                var role = new IdentityRole(); role.Name = "Moderator";
+                var role = new IdentityRole {Name = "Moderator"};
                 roleManager.Create(role);
             }
 
             if (!roleManager.RoleExists("User"))
             {
-                var role = new IdentityRole(); role.Name = "User";
+                var role = new IdentityRole {Name = "User"};
                 roleManager.Create(role);
             }
 

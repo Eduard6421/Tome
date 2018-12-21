@@ -8,7 +8,25 @@
 @foreach (var user in ViewBag.usersWithRoles)
 {
     <h1>@user.Username</h1>
-    <h1>@user.Email</h1>
     <h1>@user.Role</h1>
-         
+    <h1>@user.Id</h1>
+
+    @Html.ActionLink(
+        "Promote",
+        "Promote",
+        "Account",
+        new 
+        {
+            id = @user.Id
+        },null);
+
+    @Html.ActionLink(
+        "Demote",
+        "Demote",
+        "Account",
+        new
+        {
+            id = @user.Id
+        },null);
+
 }
