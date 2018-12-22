@@ -12,10 +12,11 @@ namespace Tome.Models
     {
         [Key]
         public int TomeId { get; set; }
+        [Required]
         public string Name { get; set; }
-        
+        [Required]
         public DateTime CreationDate { get; set; }
-
+        [Required]
         public bool IsPrivate { get; set; } = false;
         
 

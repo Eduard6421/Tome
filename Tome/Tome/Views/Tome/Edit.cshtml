@@ -1,27 +1,19 @@
-﻿@model Tome.Models.TomeContent
+﻿@model Tome.Models.TomeViewModel
 @{
     ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var editor = ViewBag.Editor;
+    var referredTome = @Model.ReferredTome.TomeId;
 }
 
 <h2>Edit</h2>
 
-@Html.BeginForm("Edit", "Tome", FormMethod.Post)
+@using (Html.BeginForm("Edit", "Tome", FormMethod.Post))
 {
-    @Html.TextAreaFor(m => m.Content)
-    @Html.TextAreaFor(m => m.Title)
-    @Html.CheckBoxFor(m => m.requestTome.IsPrivate)
+    @Html.CheckBoxFor(m => m.ReferredTome.IsPrivate)
+    @Html.TextBoxFor(m => m.ReferredTome.TomeId,new {@Value = referredTome, @type="hidden"})
+    @Html.Label("Is Private")
+    @Html.Raw(editor)
     <input type="submit" value="Edit">
 }
 
-
-
-<!--
-<form action="/Tome/Edit" method="post">
-    <!--numai ownerul
-<label>IsPrivate</label>
-<input type="checkbox" value="true" name="IsPrivate" />
-<textarea name="content"></textarea>
-<button type="submit">Edit</button>
-</form>
--->

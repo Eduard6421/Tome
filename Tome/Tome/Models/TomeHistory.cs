@@ -13,8 +13,6 @@ namespace Tome.Models
         [Key]
         public int Id { get; set; }
 
-        public string Name { get; set; }
-
         public DateTime ModificationDate { get; set; }
 
         [ForeignKey("Tome")]

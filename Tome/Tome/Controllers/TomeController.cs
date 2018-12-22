@@ -15,93 +15,132 @@ namespace Tome.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        private readonly string BASE_PATH = @"C:\Users\Eduard\Desktop\tomes\tomes";
+        private readonly string BASE_PATH = @"tomes\";
+
+        private readonly string TOME_IDENTIFIER = "tome-";
+
+
         // GET: Tome
         public ActionResult Index()
         {
             var tomes = from tome in db.Tomes
                         orderby tome.CreationDate
                         select tome;
-            
+
 
             ViewBag.Tomes = tomes;
-            
+
             return View();
         }
 
 
-        /// <summary>
-        ///  Receives an id an return the proper tome
-        /// </summary>
-        /// <param name="id">The id of the tome</param>
-        /// <returns>The tome object</returns>
         [HttpGet]
         public ActionResult Show(int id)
         {
-            Models.Tome tome = db.Tomes.Find(id);
-            var currentTomeHistory = (from tomeHistory in db.TomeHistories
-                                        where tomeHistory.TomeId == id
-                                        orderby tomeHistory.ModificationDate
-                                        select tomeHistory).Take(1);
-            ViewBag.currentTomeHistory = currentTomeHistory;
-            return View();
+
+            try
+            {
+                String currentUserId = User.Identity.GetUserId();
+
+                ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
+
+                var roleName = (from userroles in db.UserRoles
+                                join roles in db.Roles on userroles.RoleId equals roles.Id
+                                where userroles.UserId == currentUserId
+                           select roles.Name).FirstOrDefault();
+
+                var currentTome = (from tome in db.Tomes
+                                   where tome.TomeId == id
+                                   select tome).SingleOrDefault();
+
+                if (currentTome.IsPrivate == true && (currentUserId == null || (currentUser != currentTome.ApplicationUser && roleName != "Moderator" && roleName != "Administrator")))
+                {
+                    //Denied Access ( bc ori nu e logat ori nu e detinatorul ori nu e moderator / administrator)
+                    return RedirectToAction("Index");
+                }
+
+
+                int currentHistory = (from version in db.CurrentVersions
+                                      where version.TomeId == id
+                                      select version.TomeHistoryId).SingleOrDefault();
+
+
+                var currentTomeHistory = (from tomeHistory in db.TomeHistories
+                                          where tomeHistory.Id == currentHistory
+                                          select tomeHistory).SingleOrDefault();
+
+                TomeViewModel currentTomeViewModel = new TomeViewModel();
+
+                currentTomeViewModel.ReferredTome = db.Tomes.Find(id);
+                currentTomeViewModel.TomeContent.Content = System.IO.File.ReadAllText(currentTomeHistory.FilePath.Replace(@"\\",@"\"));
+
+                return View(currentTomeViewModel);
+
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("Index");
+            }
         }
 
 
         [HttpGet]
         public ActionResult Add()
         {
-            Editor Editor1 = new Editor(System.Web.HttpContext.Current, "Editor1");
-            Editor1.LoadFormData("nalapuladetigqan");
-            Editor1.MvcInit();
-            ViewBag.Editor = Editor1.MvcGetString();
+            Models.TomeViewModel newTomeViewModel = new TomeViewModel();
+            Editor TextEditor = new Editor(System.Web.HttpContext.Current, "Editor");
+
+            TextEditor.LoadFormData("\n A new tome has been created.\n");
+            TextEditor.MvcInit();
+            ViewBag.Editor = TextEditor.MvcGetString();
 
 
-            return View();
+            return View(newTomeViewModel);
         }
 
         [HttpPost]
-        public ActionResult Add(Models.Tome tome)
+        public ActionResult Add(Models.TomeViewModel tome, String Editor)
         {
             try
             {
-
                 string currentUserId = User.Identity.GetUserId();
                 ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
 
 
-                tome.CreationDate = DateTime.Now;
-                tome.ApplicationUser = currentUser;
-                db.Tomes.Add(tome);
+                tome.ReferredTome.CreationDate = DateTime.Now;
+                tome.ReferredTome.ApplicationUser = currentUser;
+                db.Tomes.Add(tome.ReferredTome);
                 db.SaveChanges();
 
                 // create init history
 
                 TomeHistory tomeHistory = new TomeHistory
                 {
-                    Tome = tome,
-                    FilePath = BASE_PATH + "-" +
-                               (User.Identity.GetUserName().IsEmpty() ? "anonymous" : User.Identity.GetUserName()) +
-                               "-" + DateTime.Now.ToString("yyyyMMddHHmmss"),
+                    Tome = tome.ReferredTome,
+                    FilePath = BASE_PATH + TOME_IDENTIFIER + (User.Identity.GetUserName().IsEmpty() ? "anonymous" : User.Identity.GetUserName()) + "-" + DateTime.Now.ToString("yyyyMMddHHmmss"),
                     ModificationDate = DateTime.Now,
                     ApplicationUser = currentUser
                 };
+
+
                 db.TomeHistories.Add(tomeHistory);
                 db.SaveChanges();
 
 
-                CurrentVersion currentVersion = new CurrentVersion {TomeHistory = tomeHistory, Tome = tome};
+                //Write content to file
+                System.IO.File.WriteAllText(tomeHistory.FilePath, Editor);
+
+
+                CurrentVersion currentVersion = new CurrentVersion { TomeHistory = tomeHistory, Tome = tome.ReferredTome };
                 db.CurrentVersions.Add(currentVersion);
                 db.SaveChanges();
-
-
 
                 return RedirectToAction("Index");
             }
             catch (Exception e)
             {
                 Debug.WriteLine("An error occured: " + e);
-                return View();
+                return RedirectToAction("Index");
             }
 
         }
@@ -109,48 +148,84 @@ namespace Tome.Controllers
         [HttpGet]
         public ActionResult Edit(int id)
         {
-            Models.Tome tome = db.Tomes.Find(id);
-            ViewBag.tome = tome;
-            return View();
+            try
+            {
+                String filePath;
+
+                Models.Tome tome = db.Tomes.Find(id);
+
+                Models.TomeViewModel editTomeViewModel = new TomeViewModel();
+
+                Editor TextEditor = new Editor(System.Web.HttpContext.Current, "Editor");
+
+                editTomeViewModel.ReferredTome = tome;
+
+
+                // Find current version and get the file path
+                int currentVersion = (from version in db.CurrentVersions
+                                      where version.TomeId == id
+                                      select version.TomeHistoryId).SingleOrDefault();
+
+                filePath = (from history in db.TomeHistories
+                            where history.Id == id
+                            select history.FilePath).SingleOrDefault();
+
+
+                String tomeContent = System.IO.File.ReadAllText(filePath);
+
+                //Load the contents into the editor
+
+                TextEditor.LoadFormData(tomeContent);
+                TextEditor.MvcInit();
+                ViewBag.Editor = TextEditor.MvcGetString();
+
+                editTomeViewModel.ReferredTome = tome;
+
+
+                return View(editTomeViewModel);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("An error occured: " + e);
+                return RedirectToAction("Index");
+            }
+
         }
 
-        public ActionResult Edit(int id,TomeContent tomeContent)
+        [HttpPost]
+        public ActionResult Edit(TomeViewModel editedTome, String Editor)
         {
             try
             {
                 string currentUserId = User.Identity.GetUserId();
                 ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
 
-                Models.Tome tome = db.Tomes.Find(id);
+                Models.Tome tome = db.Tomes.Find(editedTome.ReferredTome.TomeId);
                 Models.TomeHistory tomeHistory = new TomeHistory();
-                if (TryUpdateModel(tome))
-                {
-                    tome.CreationDate = DateTime.Now;
-                    tome.IsPrivate = tomeContent.requestTome.IsPrivate;
 
-                    // register history
-                    tomeHistory.Tome = tome;
-                    tomeHistory.FilePath = BASE_PATH + "-" + (User.Identity.GetUserName().IsEmpty() ? "anonymous" : User.Identity.GetUserName()) + "-" + DateTime.Now.ToString("yyyyMMddHHmmss");
-                    
-                    // create file and fill with content
-                    Debug.WriteLine(tomeContent.Content);
-                    Debug.WriteLine(tomeHistory.FilePath);
-                    System.IO.File.WriteAllText(tomeHistory.FilePath, tomeContent.Content);
+                tome.CreationDate = DateTime.Now;
+                tome.IsPrivate = editedTome.ReferredTome.IsPrivate;
 
-                    // insert into db
-                    tomeHistory.ModificationDate = DateTime.Now;
-                    tomeHistory.ApplicationUser = currentUser;
-                    db.TomeHistories.Add(tomeHistory);
-                    db.SaveChanges();
+                // register history
+                tomeHistory.Tome = tome;
+                tomeHistory.FilePath = BASE_PATH + TOME_IDENTIFIER + (User.Identity.GetUserName().IsEmpty() ? "anonymous" : User.Identity.GetUserName()) + "-" + DateTime.Now.ToString("yyyyMMddHHmmss");
+
+                // create file and fill with content
+                System.IO.File.WriteAllText(tomeHistory.FilePath, Editor);
+
+                // insert into db
+                tomeHistory.ModificationDate = DateTime.Now;
+                tomeHistory.ApplicationUser = currentUser;
+                db.TomeHistories.Add(tomeHistory);
+                db.SaveChanges();
 
 
-                    // update curent version
+                // update curent version
 
-                    var currentVersion = db.CurrentVersions.SingleOrDefault(m => m.Tome.TomeId == id);
-                    currentVersion.TomeHistory = tomeHistory;
-                    db.SaveChanges();
+                var currentVersion = db.CurrentVersions.SingleOrDefault(m => m.Tome.TomeId == editedTome.ReferredTome.TomeId);
+                currentVersion.TomeHistory = tomeHistory;
+                db.SaveChanges();
 
-                }
             }
             catch (Exception e)
             {
@@ -159,7 +234,7 @@ namespace Tome.Controllers
             }
 
 
-            return View();
+            return RedirectToAction("Index");
         }
 
         public ActionResult Delete(int id)

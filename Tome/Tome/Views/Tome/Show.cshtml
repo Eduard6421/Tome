@@ -1,13 +1,14 @@
-﻿
+﻿@model Tome.Models.TomeViewModel
 @{
     ViewBag.Title = "Show";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Show</h2>
+<h2>Tome content</h2>
 
 
-@foreach (var tome in ViewBag.currentTomeHistory)
-{
-    <h1>@tome.FilePath</h1>
-}
+<h2>@Model.ReferredTome.Name</h2>
+<h4>@Model.ReferredTome.IsPrivate</h4>
+<h4>@Model.ReferredTome.CreationDate</h4>
+
+@Model.TomeContent.Content

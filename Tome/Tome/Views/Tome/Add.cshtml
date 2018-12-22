@@ -1,18 +1,38 @@
-﻿
+﻿@model Tome.Models.TomeViewModel
 @{
     ViewBag.Title = "Add";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var editor= ViewBag.Editor;    
 }
 
-<h2>Add</h2>
 
+<div class="pb-2 mt-4 mb-2 border border-bottom">
+    <h2>Create a new tome</h2>
+</div>
 <form action="/Tome/Add" method="post">
-    <label>Name</label>
-    <input type="text" name="Name" value="" />
-    <label>IsPrivate</label>
-    <input type="checkbox" value="true" name="IsPrivate" />
-    <button type="submit">Add</button>
-    @Html.Raw(ViewBag.Editor)
+
+    <div class="form-group">
+
+        <div class="form-text mb-5">
+            <label for="Name">Tome Name</label>
+            @Html.TextBoxFor(m => m.ReferredTome.Name)
+
+            <!--<input type="text" class="form-control" aria-label="default" id="Name" name="Name" ria-describedby="inputGroup-sizing-default" value="" />
+        -->
+        </div>
+        <div class="form-check mb-4">
+            <!---<input class="form-check-input" type="checkbox" value="" id="defaultCheck" name="IsPrivate">-->
+            @Html.CheckBoxFor(m => m.ReferredTome.IsPrivate)
+            <label class="form-check-label" for="defaultCheck"> IsPrivate </label>
+        </div>
+
+        @Html.Raw(editor);
+
+        <button type="submit">Save Tome</button>
+
+    </div>
     
+
+
 
 </form>
