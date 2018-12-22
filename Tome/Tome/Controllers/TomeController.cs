@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.WebPages;
@@ -15,7 +16,7 @@ namespace Tome.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        private readonly string BASE_PATH = @"tomes\";
+        private readonly string BASE_PATH =  Assembly.GetExecutingAssembly().Location + "tomes\\";
 
         private readonly string TOME_IDENTIFIER = "tome-";
 
@@ -72,7 +73,10 @@ namespace Tome.Controllers
                 TomeViewModel currentTomeViewModel = new TomeViewModel();
 
                 currentTomeViewModel.ReferredTome = db.Tomes.Find(id);
-                currentTomeViewModel.TomeContent.Content = System.IO.File.ReadAllText(currentTomeHistory.FilePath.Replace(@"\\",@"\"));
+                currentTomeViewModel.TomeContent = new TomeContent();
+
+                String filePath = currentTomeHistory.FilePath.Replace(@"\\", @"\");
+                currentTomeViewModel.TomeContent.Content = System.IO.File.ReadAllText(filePath);
 
                 return View(currentTomeViewModel);
 

@@ -11,4 +11,4 @@
 <h4>@Model.ReferredTome.IsPrivate</h4>
 <h4>@Model.ReferredTome.CreationDate</h4>
 
-@Model.TomeContent.Content
+@Html.Raw(Model.TomeContent.Content)
