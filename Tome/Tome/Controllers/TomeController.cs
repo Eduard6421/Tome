@@ -16,7 +16,7 @@ namespace Tome.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        private readonly string BASE_PATH = Assembly.GetExecutingAssembly().Location + "tomes\\";
+        private readonly string BASE_PATH = "\\uploads\\";
 
         private readonly string TOME_IDENTIFIER = "tome-";
 
@@ -124,7 +124,7 @@ namespace Tome.Controllers
 
                 String filePath = currentTomeHistory.FilePath.Replace(@"\\", @"\");
                 currentTomeViewModel.TomeContent.Content = System.IO.File.ReadAllText(filePath);
-
+                ViewBag.filePathHtml = filePath;
                 return View(currentTomeViewModel);
 
             }
@@ -156,8 +156,9 @@ namespace Tome.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult Add(Models.TomeViewModel tome, String Editor, String TagId)
+        public ActionResult Add(Models.TomeViewModel tome)
         {
+            string path = Server.MapPath("..");
             try
             {
                 string currentUserId = User.Identity.GetUserId();
@@ -174,7 +175,7 @@ namespace Tome.Controllers
                 TomeHistory tomeHistory = new TomeHistory
                 {
                     Tome = tome.ReferredTome,
-                    FilePath = BASE_PATH + TOME_IDENTIFIER +
+                    FilePath = path + BASE_PATH + TOME_IDENTIFIER +
                                (User.Identity.GetUserName().IsEmpty() ? "anonymous" : User.Identity.GetUserName()) +
                                "-" + DateTime.Now.ToString("yyyyMMddHHmmss"),
                     ModificationDate = DateTime.Now,
@@ -184,10 +185,9 @@ namespace Tome.Controllers
 
                 db.TomeHistories.Add(tomeHistory);
                 db.SaveChanges();
-
-
                 //Write content to file
-                System.IO.File.WriteAllText(tomeHistory.FilePath, Editor);
+                string content = tome.TomeContent.Content.Replace("..", path).Replace(@"/",@"\");
+                System.IO.File.WriteAllText(tomeHistory.FilePath, content);
 
 
                 CurrentVersion currentVersion = new CurrentVersion

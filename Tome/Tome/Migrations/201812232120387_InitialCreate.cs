@@ -105,7 +105,7 @@ namespace Tome.Migrations
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.AspNetUsers", t => t.UserId)
-                .ForeignKey("dbo.Tomes", t => t.TomeId, cascadeDelete: false)
+                .ForeignKey("dbo.Tomes", t => t.TomeId, cascadeDelete: true)
                 .Index(t => t.TomeId)
                 .Index(t => t.UserId);
             
