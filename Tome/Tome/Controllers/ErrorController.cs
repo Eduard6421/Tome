@@ -21,6 +21,7 @@ namespace Tome.Controllers
 
         public ActionResult InternalServerError()
         {
+            Response.StatusCode = 500;  //you may want to set this to 200
             return View();
         }
 

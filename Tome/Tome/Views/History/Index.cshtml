@@ -1,4 +1,4 @@
-﻿
+﻿@model Int32
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -7,8 +7,15 @@
 <h2>Index</h2>
 
 
-@foreach (var history in ViewBag.currentTomeHistory)
+@foreach (var history in ViewBag.TomeHistoryList)
 {
+    <h1>@history.ApplicationUser.Email</h1>
     <h1>@history.ModificationDate</h1>
-    <h1>@history.FilePath</h1>
+
+    using (Html.BeginForm("ChangeVersion", "History", FormMethod.Post))
+    {
+        @Html.TextBoxFor(m => m, new { @Value = @Model, @type = "hidden" })
+        <input type="submit" value="Change to this version">
+    }
+
 }

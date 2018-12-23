@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -14,19 +15,35 @@ namespace Tome.Controllers
         // GET: History
         public ActionResult Index(int id)
         {
-            var currentTomeHistory = (from tomeHistory in db.TomeHistories
+            var TomeHistoryList = (from tomeHistory in db.TomeHistories
                 where tomeHistory.TomeId == id
                 orderby tomeHistory.ModificationDate descending 
                 select tomeHistory);
-            ViewBag.currentTomeHistory = currentTomeHistory;
-            return View();
+            ViewBag.TomeHistoryList = TomeHistoryList;
+            return View(id);
         }
 
         [HttpPost]
-        public ActionResult RevertHistory(int id,int idHistory)
+        public ActionResult ChangeVersion(int id,int idHistory)
         {
-            
 
+            try
+            {
+                var currentTomeHistory = (from currentVersion in db.CurrentVersions
+                    where currentVersion.TomeId == id
+                    select currentVersion).SingleOrDefault();
+
+                currentTomeHistory.TomeHistoryId = idHistory;
+
+                db.SaveChanges();
+
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("An error has occured: " + e);
+                return RedirectToAction("Index");
+
+            }
 
             return RedirectToAction("Index");
         }
