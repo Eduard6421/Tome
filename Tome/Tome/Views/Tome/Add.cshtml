@@ -2,39 +2,58 @@
 @{
     ViewBag.Title = "Add";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var editor = ViewBag.Editor;
 }
+<script src="https://cloud.tinymce.com/stable/tinymce.min.js"></script>
 
+<script>
+    tinymce.init({
+        images_upload_url: '/Tome/Upload',
+        selector: '#content_html',
+        plugins : [
+            "advlist autolink lists link image charmap print preview hr anchor pagebreak",
+            "searchreplace wordcount visualblocks visualchars code fullscreen",
+            "insertdatetime media nonbreaking save table contextmenu directionality",
+            "emoticons template paste textcolor colorpicker textpattern imagetools"
+        ],
+    });
+
+    function upload(form) {
+        tinymce.activeEditor.uploadImages(function (success) {
+            form.submit();
+        });
+        return false;
+    }
+</script>
 
 <div class="pb-2 mt-4 mb-2 border border-bottom">
     <h2>Create a new tome</h2>
 </div>
-<form action="/Tome/Add" method="post">
+@using (Html.BeginForm("Add", "Tome", FormMethod.Post, new { onsubmit = "return upload(this);" })) { 
+        <div class="form-group">
+            <div class="form-text mb-5">
+                <label for="Name">Tome Name</label>
+                @Html.TextBoxFor(m => m.ReferredTome.Name)
+                @Html.ValidationMessageFor(m => m.ReferredTome.Name, "", new { @class = "text-danger" })
 
-    <div class="form-group">
-        <div class="form-text mb-5">
-            <label for="Name">Tome Name</label>
-            @Html.TextBoxFor(m => m.ReferredTome.Name)
-            @Html.ValidationMessageFor(m => m.ReferredTome.Name, "", new { @class = "text-danger" })
+                <!--<input type="text" class="form-control" aria-label="default" id="Name" name="Name" ria-describedby="inputGroup-sizing-default" value="" />
+                -->
+            </div>
+            <div class="form-check mb-4">
+                <!---<input class="form-check-input" type="checkbox" value="" id="defaultCheck" name="IsPrivate">-->
+                @Html.CheckBoxFor(m => m.ReferredTome.IsPrivate)
+                <label class="form-check-label" for="defaultCheck"> IsPrivate </label>
+            </div>
+            @Html.TextBoxFor(m => m.TomeContent.Content, new { @id = "content_html", @row = 10, @name = "data" })
 
-            <!--<input type="text" class="form-control" aria-label="default" id="Name" name="Name" ria-describedby="inputGroup-sizing-default" value="" />
-            -->
+
+            <button type="submit">Save Tome</button>
+
         </div>
-        <div class="form-check mb-4">
-            <!---<input class="form-check-input" type="checkbox" value="" id="defaultCheck" name="IsPrivate">-->
-            @Html.CheckBoxFor(m => m.ReferredTome.IsPrivate)
-            <label class="form-check-label" for="defaultCheck"> IsPrivate </label>
-        </div>
+        <!--
+        @Html.DropDownListFor(m => m.SelectedTag,Model.TagList);
+        -->
+}
 
-        @Html.Raw(editor);
-
-        <button type="submit">Save Tome</button>
-
-    </div>
-
-   @Html.DropDownListFor(m => m.SelectedTag,Model.TagList);
-
-</form>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

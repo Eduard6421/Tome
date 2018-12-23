@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.WebPages;
 using Microsoft.AspNet.Identity;
-using RTE;
 using Tome.Models;
 
 namespace Tome.Controllers
@@ -16,7 +16,7 @@ namespace Tome.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        private readonly string BASE_PATH =  Assembly.GetExecutingAssembly().Location + "tomes\\";
+        private readonly string BASE_PATH = Assembly.GetExecutingAssembly().Location + "tomes\\";
 
         private readonly string TOME_IDENTIFIER = "tome-";
 
@@ -25,14 +25,15 @@ namespace Tome.Controllers
         public ActionResult Index()
         {
             var tomes = (from tome in db.Tomes
-                        orderby tome.CreationDate
-                        select tome).OrderBy(r => Guid.NewGuid()).Take(5);
+                orderby tome.CreationDate
+                select tome).OrderBy(r => Guid.NewGuid()).Take(5);
 
             ViewBag.Tomes = tomes;
 
             return View();
         }
 
+        /*
         public ActionResult Index(bool sortByNameAsc)
         {
 
@@ -55,7 +56,7 @@ namespace Tome.Controllers
 
             return View();
         }
-
+        */
         public ActionResult GetAll()
         {
             var tomes = (from tome in db.Tomes
@@ -90,15 +91,17 @@ namespace Tome.Controllers
                 ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
 
                 var roleName = (from userroles in db.UserRoles
-                                join roles in db.Roles on userroles.RoleId equals roles.Id
-                                where userroles.UserId == currentUserId
-                           select roles.Name).FirstOrDefault();
+                    join roles in db.Roles on userroles.RoleId equals roles.Id
+                    where userroles.UserId == currentUserId
+                    select roles.Name).FirstOrDefault();
 
                 var currentTome = (from tome in db.Tomes
-                                   where tome.TomeId == id
-                                   select tome).SingleOrDefault();
+                    where tome.TomeId == id
+                    select tome).SingleOrDefault();
 
-                if (currentTome.IsPrivate == true && (currentUserId == null || (currentUser != currentTome.ApplicationUser && roleName != "Moderator" && roleName != "Administrator")))
+                if (currentTome.IsPrivate == true && (currentUserId == null ||
+                                                      (currentUser != currentTome.ApplicationUser &&
+                                                       roleName != "Moderator" && roleName != "Administrator")))
                 {
                     //Denied Access ( bc ori nu e logat ori nu e detinatorul ori nu e moderator / administrator)
                     return RedirectToAction("Index");
@@ -106,13 +109,13 @@ namespace Tome.Controllers
 
 
                 int currentHistory = (from version in db.CurrentVersions
-                                      where version.TomeId == id
-                                      select version.TomeHistoryId).SingleOrDefault();
+                    where version.TomeId == id
+                    select version.TomeHistoryId).SingleOrDefault();
 
 
                 var currentTomeHistory = (from tomeHistory in db.TomeHistories
-                                          where tomeHistory.Id == currentHistory
-                                          select tomeHistory).SingleOrDefault();
+                    where tomeHistory.Id == currentHistory
+                    select tomeHistory).SingleOrDefault();
 
                 TomeViewModel currentTomeViewModel = new TomeViewModel();
 
@@ -137,15 +140,15 @@ namespace Tome.Controllers
         public ActionResult Add()
         {
             Models.TomeViewModel newTomeViewModel = new TomeViewModel();
-            Editor TextEditor = new Editor(System.Web.HttpContext.Current, "Editor");
+            //Editor TextEditor = new Editor(System.Web.HttpContext.Current, "Editor");
 
-            TextEditor.LoadFormData("\n A new tome has been created.\n");
-            TextEditor.MvcInit();
+            //TextEditor.LoadFormData("\n A new tome has been created.\n");
+            //TextEditor.MvcInit();
 
             newTomeViewModel.TagList =
                 new SelectList(db.Tags.Select(x => new SelectListItem {Value = x.TagId.ToString(), Text = x.TagTitle}));
 
-            ViewBag.Editor = TextEditor.MvcGetString();
+            //ViewBag.Editor = TextEditor.MvcGetString();
 
 
             return View(newTomeViewModel);
@@ -174,7 +177,9 @@ namespace Tome.Controllers
                 TomeHistory tomeHistory = new TomeHistory
                 {
                     Tome = tome.ReferredTome,
-                    FilePath = BASE_PATH + TOME_IDENTIFIER + (User.Identity.GetUserName().IsEmpty() ? "anonymous" : User.Identity.GetUserName()) + "-" + DateTime.Now.ToString("yyyyMMddHHmmss"),
+                    FilePath = BASE_PATH + TOME_IDENTIFIER +
+                               (User.Identity.GetUserName().IsEmpty() ? "anonymous" : User.Identity.GetUserName()) +
+                               "-" + DateTime.Now.ToString("yyyyMMddHHmmss"),
                     ModificationDate = DateTime.Now,
                     ApplicationUser = currentUser
                 };
@@ -188,7 +193,8 @@ namespace Tome.Controllers
                 System.IO.File.WriteAllText(tomeHistory.FilePath, Editor);
 
 
-                CurrentVersion currentVersion = new CurrentVersion { TomeHistory = tomeHistory, Tome = tome.ReferredTome };
+                CurrentVersion currentVersion = new CurrentVersion
+                    {TomeHistory = tomeHistory, Tome = tome.ReferredTome};
                 db.CurrentVersions.Add(currentVersion);
                 db.SaveChanges();
 
@@ -202,6 +208,57 @@ namespace Tome.Controllers
 
         }
 
+
+
+        /// <summary>
+        /// Saves the contents of an uploaded image file.
+        /// </summary>
+        /// <param name="targetFolder">Location where to save the image file.</param>
+        /// <param name="file">The uploaded image file.</param>
+        /// <exception cref="InvalidOperationException">Invalid MIME content type.</exception>
+        /// <exception cref="InvalidOperationException">Invalid file extension.</exception>
+        /// <exception cref="InvalidOperationException">File size limit exceeded.</exception>
+        /// <returns>The relative path where the file is stored.</returns>
+        private static string SaveFile(string targetFolder, HttpPostedFileBase file)
+        {
+            const int megabyte = 1024 * 1024;
+
+            if (!file.ContentType.StartsWith("image/"))
+            {
+                throw new InvalidOperationException("Invalid MIME content type.");
+            }
+
+            var extension = Path.GetExtension(file.FileName.ToLowerInvariant());
+            string[] extensions = { ".gif", ".jpg", ".png", ".svg", ".webp" };
+            if (!extensions.Contains(extension))
+            {
+                throw new InvalidOperationException("Invalid file extension.");
+            }
+
+            if (file.ContentLength > (8 * megabyte))
+            {
+                throw new InvalidOperationException("File size limit exceeded.");
+            }
+            Debug.Write(file.FileName);
+            var fileName = Guid.NewGuid() + extension;
+            var path = Path.Combine(targetFolder, fileName);
+            Debug.Write(file.FileName);
+            file.SaveAs(path);
+
+            return Path.Combine("/uploads", fileName).Replace('\\', '/');
+        }
+
+
+        [HttpPost]
+        public ActionResult Upload(HttpPostedFileBase file)
+        {
+            //Response.AppendHeader("Access-Control-Allow-Origin", "*");
+
+            var location = SaveFile(Server.MapPath("~/uploads/"), file);
+
+            return Json(new { location }, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpGet]
         public ActionResult Edit(int id)
         {
@@ -213,7 +270,7 @@ namespace Tome.Controllers
 
                 Models.TomeViewModel editTomeViewModel = new TomeViewModel();
 
-                Editor TextEditor = new Editor(System.Web.HttpContext.Current, "Editor");
+                //Editor TextEditor = new Editor(System.Web.HttpContext.Current, "Editor");
 
                 editTomeViewModel.ReferredTome = tome;
 
@@ -232,9 +289,9 @@ namespace Tome.Controllers
 
                 //Load the contents into the editor
 
-                TextEditor.LoadFormData(tomeContent);
-                TextEditor.MvcInit();
-                ViewBag.Editor = TextEditor.MvcGetString();
+                //TextEditor.LoadFormData(tomeContent);
+                //TextEditor.MvcInit();
+                //ViewBag.Editor = TextEditor.MvcGetString();
 
                 editTomeViewModel.ReferredTome = tome;
 
