@@ -3,7 +3,7 @@ namespace Tome.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class init : DbMigration
+    public partial class InitialCreate : DbMigration
     {
         public override void Up()
         {
@@ -26,7 +26,7 @@ namespace Tome.Migrations
                 c => new
                     {
                         TomeId = c.Int(nullable: false, identity: true),
-                        Name = c.String(),
+                        Name = c.String(nullable: false, maxLength: 30),
                         CreationDate = c.DateTime(nullable: false),
                         IsPrivate = c.Boolean(nullable: false),
                         ApplicationUser_Id = c.String(maxLength: 128),
@@ -98,7 +98,6 @@ namespace Tome.Migrations
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        Name = c.String(),
                         ModificationDate = c.DateTime(nullable: false),
                         TomeId = c.Int(nullable: false),
                         FilePath = c.String(),
@@ -139,7 +138,7 @@ namespace Tome.Migrations
                 c => new
                     {
                         TagId = c.Int(nullable: false, identity: true),
-                        TagTitle = c.String(),
+                        TagTitle = c.String(nullable: false),
                     })
                 .PrimaryKey(t => t.TagId);
             

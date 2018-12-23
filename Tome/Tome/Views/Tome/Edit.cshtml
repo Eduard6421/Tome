@@ -11,9 +11,9 @@
 @using (Html.BeginForm("Edit", "Tome", FormMethod.Post))
 {
     @Html.CheckBoxFor(m => m.ReferredTome.IsPrivate)
-    @Html.TextBoxFor(m => m.ReferredTome.TomeId,new {@Value = referredTome, @type="hidden"})
+    @Html.TextBoxFor(m => m.ReferredTome.TomeId, new { @Value = referredTome, @type = "hidden" })
     @Html.Label("Is Private")
     @Html.Raw(editor)
     <input type="submit" value="Edit">
 }
-
+@Html.ActionLink("Read", "Show", "Tome", new { id = referredTome }, new { @class = "btn btn-primary btn-large" })

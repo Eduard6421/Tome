@@ -1,0 +1,13 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+@foreach (var tome in ViewBag.Tomes)
+{
+    <h1>@tome.Name</h1>
+    @Html.ActionLink("Read", "Show", "Tome", new { id = tome.TomeId }, new { @class = "btn btn-primary btn-large" });
+}

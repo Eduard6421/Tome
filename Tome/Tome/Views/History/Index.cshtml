@@ -1,4 +1,4 @@
-﻿@model Int32
+﻿@Model Int32
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -9,7 +9,6 @@
 
 @foreach (var history in ViewBag.TomeHistoryList)
 {
-    <h1>@history.ApplicationUser.Email</h1>
     <h1>@history.ModificationDate</h1>
 
     using (Html.BeginForm("ChangeVersion", "History", FormMethod.Post))

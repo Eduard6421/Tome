@@ -20,14 +20,58 @@ namespace Tome.Controllers
 
         private readonly string TOME_IDENTIFIER = "tome-";
 
-
+        //Restrict the acces to these
         // GET: Tome
         public ActionResult Index()
         {
-            var tomes = from tome in db.Tomes
+            var tomes = (from tome in db.Tomes
                         orderby tome.CreationDate
-                        select tome;
+                        select tome).OrderBy(r => Guid.NewGuid()).Take(5);
 
+            ViewBag.Tomes = tomes;
+
+            return View();
+        }
+
+        public ActionResult Index(bool sortByNameAsc)
+        {
+
+            List<Models.Tome> tomes;
+
+            if (sortByNameAsc)
+            {
+                tomes= (from tome in db.Tomes
+                    orderby tome.Name
+                    select tome).ToList();
+            }
+            else
+            {
+                tomes = (from tome in db.Tomes
+                    orderby tome.Name descending
+                    select tome).ToList();
+            }
+
+            ViewBag.Tomes = tomes;
+
+            return View();
+        }
+
+        public ActionResult GetAll()
+        {
+            var tomes = (from tome in db.Tomes
+                orderby tome.CreationDate
+                select tome);
+
+            ViewBag.Tomes = tomes;
+
+            return View();
+        }
+
+        public ActionResult Search(String searchedText)
+        {
+            var tomes = (from tome in db.Tomes
+                where tome.Name.Contains(searchedText)
+                select tome);
 
             ViewBag.Tomes = tomes;
 
@@ -114,6 +158,7 @@ namespace Tome.Controllers
 
                 tome.ReferredTome.CreationDate = DateTime.Now;
                 tome.ReferredTome.ApplicationUser = currentUser;
+                tome.ReferredTome.Name = tome.ReferredTome.Name.ToLower();
                 db.Tomes.Add(tome.ReferredTome);
                 db.SaveChanges();
 
@@ -244,8 +289,11 @@ namespace Tome.Controllers
 
         public ActionResult Delete(int id)
         {
-            Models.Tome tome = db.Tomes.Find(id);
-            db.Tomes.Remove(tome);
+            
+            db.CurrentVersions.RemoveRange(db.CurrentVersions.Where(version => version.TomeId == id));
+            db.TomeHistories.RemoveRange(db.TomeHistories.Where(history => history.TomeId == id));
+            db.Tomes.Remove(db.Tomes.Find(id));
+
             db.SaveChanges();
             return RedirectToAction("Index");
         }

@@ -10,5 +10,6 @@
 <h2>@Model.ReferredTome.Name</h2>
 <h4>@Model.ReferredTome.IsPrivate</h4>
 <h4>@Model.ReferredTome.CreationDate</h4>
+@Html.ActionLink("Edit Tome", "Edit", "Tome", new { id = Model.ReferredTome.TomeId }, new { @class = "btn btn-primary btn-large" })
 
 @Html.Raw(Model.TomeContent.Content)

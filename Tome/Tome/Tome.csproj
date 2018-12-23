@@ -217,17 +217,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201812201912337_init.cs" />
-    <Compile Include="Migrations\201812201912337_init.Designer.cs">
-      <DependentUpon>201812201912337_init.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201812222319430_InitialCreate.cs" />
-    <Compile Include="Migrations\201812222319430_InitialCreate.Designer.cs">
-      <DependentUpon>201812222319430_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201812230113309_InitialCreate1.cs" />
-    <Compile Include="Migrations\201812230113309_InitialCreate1.Designer.cs">
-      <DependentUpon>201812230113309_InitialCreate1.cs</DependentUpon>
+    <Compile Include="Migrations\201812230152480_InitialCreate.cs" />
+    <Compile Include="Migrations\201812230152480_InitialCreate.Designer.cs">
+      <DependentUpon>201812230152480_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -321,8 +313,13 @@
     <Content Include="Views\Account\Promote.cshtml" />
     <Content Include="Views\Error\NotFound.cshtml" />
     <Content Include="Views\Error\InternalServerError.cshtml" />
+    <Content Include="Views\Tome\Search.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201812230152480_InitialCreate.resx">
+      <DependentUpon>201812230152480_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -335,17 +332,6 @@
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.3.1.min.map" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201812201912337_init.resx">
-      <DependentUpon>201812201912337_init.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201812222319430_InitialCreate.resx">
-      <DependentUpon>201812222319430_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201812230113309_InitialCreate1.resx">
-      <DependentUpon>201812230113309_InitialCreate1.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

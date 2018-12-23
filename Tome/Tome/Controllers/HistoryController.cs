@@ -15,23 +15,31 @@ namespace Tome.Controllers
         // GET: History
         public ActionResult Index(int id)
         {
-            var TomeHistoryList = (from tomeHistory in db.TomeHistories
-                where tomeHistory.TomeId == id
-                orderby tomeHistory.ModificationDate descending 
-                select tomeHistory);
-            ViewBag.TomeHistoryList = TomeHistoryList;
-            return View(id);
+            try
+            {
+                var TomeHistoryList = (from tomeHistory in db.TomeHistories
+                                       where tomeHistory.TomeId == id
+                                       orderby tomeHistory.ModificationDate descending
+                                       select tomeHistory);
+                ViewBag.TomeHistoryList = TomeHistoryList;
+                return View(id);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("An error has occured");
+                return RedirectToAction("Index");
+            }
         }
 
         [HttpPost]
-        public ActionResult ChangeVersion(int id,int idHistory)
+        public ActionResult ChangeVersion(int id, int idHistory)
         {
 
             try
             {
                 var currentTomeHistory = (from currentVersion in db.CurrentVersions
-                    where currentVersion.TomeId == id
-                    select currentVersion).SingleOrDefault();
+                                          where currentVersion.TomeId == id
+                                          select currentVersion).SingleOrDefault();
 
                 currentTomeHistory.TomeHistoryId = idHistory;
 
