@@ -318,6 +318,7 @@
     <Content Include="Views\Admin\Demote.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Admin\CreateTag.cshtml" />
+    <Content Include="Views\Admin\ListTags.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201812230152480_InitialCreate.resx">

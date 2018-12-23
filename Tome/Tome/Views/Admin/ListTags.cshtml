@@ -1,0 +1,20 @@
+﻿@model List<Tome.Models.Tag>
+@{
+    ViewBag.Title = "ListTags";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>ListTags</h2>
+
+@foreach (var tag in Model)
+{
+    @tag.TagTitle
+    @Html.ActionLink(
+        tag.TagTitle,
+        "DeleteTag",
+        "Account",
+        new 
+        {
+            id = @tag.TagId
+        },null);
+}

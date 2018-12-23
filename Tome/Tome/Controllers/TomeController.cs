@@ -166,9 +166,6 @@ namespace Tome.Controllers
                 db.Tomes.Add(tome.ReferredTome);
                 db.SaveChanges();
 
-
-
-
                 // create init history
 
                 TomeHistory tomeHistory = new TomeHistory
