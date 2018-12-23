@@ -103,13 +103,13 @@ namespace Tome.Controllers
         }
 
         [HttpPost]
+        [ValidateInput(false)]
         public ActionResult Add(Models.TomeViewModel tome, String Editor)
         {
             try
             {
                 string currentUserId = User.Identity.GetUserId();
                 ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
-
 
                 tome.ReferredTome.CreationDate = DateTime.Now;
                 tome.ReferredTome.ApplicationUser = currentUser;
