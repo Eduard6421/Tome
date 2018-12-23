@@ -11,6 +11,8 @@ namespace Tome.Models
     {
         [Key]
         public int TagId { get; set; }
+        [Required]
+        [RegularExpression("^[a-zA-Z0-9]*$", ErrorMessage = "Only alphabets and numbers allowed.")]
         public string TagTitle { get; set; }
 
     }

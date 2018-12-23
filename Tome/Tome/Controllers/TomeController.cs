@@ -89,6 +89,7 @@ namespace Tome.Controllers
 
 
         [HttpGet]
+        [ValidateInput(true)]
         public ActionResult Add()
         {
             Models.TomeViewModel newTomeViewModel = new TomeViewModel();
