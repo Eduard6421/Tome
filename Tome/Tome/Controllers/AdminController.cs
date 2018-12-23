@@ -87,7 +87,7 @@ namespace Tome.Controllers
 
             }
 
-            return View();
+            return RedirectToAction("ListUsers");
         }
 
         [HttpGet]
@@ -123,9 +123,20 @@ namespace Tome.Controllers
 
             }
 
-            return View();
+            return RedirectToAction("ListUsers");
 
         }
+
+        [HttpGet]
+        public ActionResult ListTags()
+        {
+            List<Tag> tagList = new List<Tag>();
+
+            tagList = db.Tags.Select(x => x).ToList();
+
+            return View(tagList);
+        }
+
 
         [HttpGet]
         public ActionResult CreateTag()
@@ -136,16 +147,39 @@ namespace Tome.Controllers
             return View(newTag);
         }
 
-
+        [HttpPost]
         public ActionResult CreateTag(String tagName)
         {
+            try
+            {
+                Tag newTag = new Tag();
+                newTag.TagTitle = tagName.ToLower();
 
+                db.Tags.Add(newTag);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("An error has occured: " + e);
+            }
 
-
-            return RedirectToAction("Index");
+            return RedirectToAction("ListTags");
         }
 
 
+        public ActionResult DeleteTag(String id)
+        {
+            try
+            {
+                var tag = db.Tags.Where(x=> x.TagId == Int32.Parse(id)).Select(x => x).SingleOrDefault();
+                db.Tags.Remove(tag);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("An error has occured: " + e);
+            }
+
+            return RedirectToAction("ListTags");
+        }
 
 
 
