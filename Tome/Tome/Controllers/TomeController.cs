@@ -141,6 +141,10 @@ namespace Tome.Controllers
 
             TextEditor.LoadFormData("\n A new tome has been created.\n");
             TextEditor.MvcInit();
+
+            newTomeViewModel.TagList =
+                new SelectList(db.Tags.Select(x => new SelectListItem {Value = x.TagId.ToString(), Text = x.TagTitle}));
+
             ViewBag.Editor = TextEditor.MvcGetString();
 
 
@@ -149,7 +153,7 @@ namespace Tome.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult Add(Models.TomeViewModel tome, String Editor)
+        public ActionResult Add(Models.TomeViewModel tome, String Editor, String TagId)
         {
             try
             {
@@ -161,6 +165,9 @@ namespace Tome.Controllers
                 tome.ReferredTome.Name = tome.ReferredTome.Name.ToLower();
                 db.Tomes.Add(tome.ReferredTome);
                 db.SaveChanges();
+
+
+
 
                 // create init history
 
