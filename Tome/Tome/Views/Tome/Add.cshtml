@@ -33,27 +33,33 @@
 @using (Html.BeginForm("Add", "Tome", FormMethod.Post, new { onsubmit = "return upload(this);" })) { 
         <div class="form-group">
             <div class="form-text mb-5">
-                <label for="Name">Tome Name</label>
-                @Html.TextBoxFor(m => m.ReferredTome.Name)
-                @Html.ValidationMessageFor(m => m.ReferredTome.Name, "", new { @class = "text-danger" })
+                
+                <div class="form-group">
+                    <label for="Name" class="col-md-2 control-label">Tome Name</label>
+                   
+                        @Html.TextBoxFor(m => m.ReferredTome.Name, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.ReferredTome.Name, "", new { @class = "text-danger" })
+                    
+                </div>
             </div>
             <div class="form-check mb-4">
                 <!---<input class="form-check-input" type="checkbox" value="" id="defaultCheck" name="IsPrivate">-->
                 @if (Request.IsAuthenticated)
                 { 
-                    @Html.CheckBoxFor(m => m.ReferredTome.IsPrivate)
-                    <label class="form-check-label" for="defaultCheck"> IsPrivate </label>
+                    <div class="form-group">
+                        @Html.CheckBoxFor(m => m.ReferredTome.IsPrivate)
+                        <label class="form-check-label" for="defaultCheck"> IsPrivate </label>
+                    </div>
                 }
             </div>
-            @Html.TextBoxFor(m => m.TomeContent.Content, new { @id = "content_html", @row = 30, @name = "data" })
+            @Html.TextBoxFor(m => m.TomeContent.Content, new { @id = "content_html", @row = 60, @name = "data" })
 
 
-            <button type="submit">Save Tome</button>
+            <button type="submit" class="btn btn-primary btn-large">Save Tome</button>
 
         </div>
         @Html.DropDownListFor(m => m.SelectedTag,Model.TagList)
 }
-
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

@@ -7,35 +7,51 @@
     <title>@ViewBag.Title - My ASP.NET Application</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-
+    <link href="~/Content/Site.css" rel="stylesheet" />
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Tome Show", "Index", "Tome")</li>
-                    <li>@Html.ActionLink("Tome Add", "Add", "Tome")</li>
-                </ul>
-                @Html.Partial("_LoginPartial")
-            </div>
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            @Html.ActionLink("Tome Wiki", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                <li>@Html.ActionLink("About", "About", "Home")</li>
+                <li>@Html.ActionLink("Tomes", "Index", "Tome")</li>
+                <li>@Html.ActionLink("New Tome", "Add", "Tome")</li>
+
+
+                <!-- doar administrator -->
+                @if (Request.IsAuthenticated)
+                {
+                    <li>@Html.ActionLink("Users panel", "ListUsers", "Admin")</li>
+                    <li>@Html.ActionLink("Tags panel", "ListTags", "Admin")</li>
+                }
+            </ul>
+
+
+            @using (Html.BeginForm("Search", "Tome", FormMethod.Post, new { @class = "form-inline nav navbar-nav form-search" }))
+            {
+                @Html.TextBox("searchedText", "Search for Tome", new { @class = "form-control mr-sm-2", @data_val = "true", @placeholder = "Search", @data_val_required = "Search bar cannot be empty " })
+                <input class="btn btn-outline-success my-2 my-sm-0" type="submit" value="Search">
+            }
+
+            @Html.Partial("_LoginPartial")
         </div>
     </div>
+</div>
+<br />
     <div class="container body-content">
         @RenderBody()
-        <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <p>&copy; @DateTime.Now.Year - Tome Wiki</p>
         </footer>
     </div>
     @Scripts.Render("~/bundles/jquery")

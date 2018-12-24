@@ -13,7 +13,7 @@ namespace Tome.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201812241145186_InitialCreate"; }
+            get { return "201812241909286_InitialCreate"; }
         }
         
         string IMigrationMetadata.Source

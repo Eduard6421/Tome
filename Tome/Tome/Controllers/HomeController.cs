@@ -28,8 +28,9 @@ namespace Tome.Controllers
                     var tomes = (from tome in db.Tomes
                                  where tome.IsPrivate == false
                                  orderby tome.CreationDate
-                                 select tome).OrderBy(r => Guid.NewGuid()).Take(5).AsEnumerable();
-                    ViewBag.Tomes = tomes;
+                                 select tome).OrderBy(r => Guid.NewGuid()).Take(6).AsEnumerable();
+                    ViewBag.Tomes = tomes.ToList();
+                    ViewBag.Count = tomes.Count();
                 }
                 else  // successfully auth user
                 {
@@ -43,8 +44,9 @@ namespace Tome.Controllers
                         // administrator query for get all tomes
                         var tomes = (from tome in db.Tomes
                                      orderby tome.CreationDate
-                                     select tome).OrderBy(r => Guid.NewGuid()).Take(5).AsEnumerable();
-                        ViewBag.Tomes = tomes;
+                                     select tome).OrderBy(r => Guid.NewGuid()).Take(6).AsEnumerable();
+                        ViewBag.Tomes = tomes.ToList();
+                        ViewBag.Count = tomes.Count();
                     }
                     else
                     {
@@ -53,10 +55,11 @@ namespace Tome.Controllers
                         var tomes = (from tome in db.Tomes
                                      where tome.IsPrivate == false || tome.ApplicationUser.Id == currentUserId
                                      orderby tome.CreationDate
-                                     select tome).OrderBy(r => Guid.NewGuid()).Take(5).AsEnumerable();
+                                     select tome).OrderBy(r => Guid.NewGuid()).Take(6).AsEnumerable();
                         Console.WriteLine(tomes);
                         Console.WriteLine(currentUser);
-                        ViewBag.Tomes = tomes;
+                        ViewBag.Tomes = tomes.ToList();
+                        ViewBag.Count = tomes.Count();
                     }
 
                 }

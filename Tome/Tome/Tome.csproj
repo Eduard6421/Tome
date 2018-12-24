@@ -218,9 +218,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201812241145186_InitialCreate.cs" />
-    <Compile Include="Migrations\201812241145186_InitialCreate.Designer.cs">
-      <DependentUpon>201812241145186_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\201812241909286_InitialCreate.cs" />
+    <Compile Include="Migrations\201812241909286_InitialCreate.Designer.cs">
+      <DependentUpon>201812241909286_InitialCreate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -238,11 +238,16 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\TomeDB.mdf" />
+    <Content Include="App_Data\TomeDB_log.ldf">
+      <DependentUpon>TomeDB.mdf</DependentUpon>
+    </Content>
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\error.css" />
+    <Content Include="Content\table.css" />
     <Content Include="Docs\Migration-docs.txt" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -335,13 +340,12 @@
     <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="uploads\" />
     <Folder Include="Views\uploads\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201812241145186_InitialCreate.resx">
-      <DependentUpon>201812241145186_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201812241909286_InitialCreate.resx">
+      <DependentUpon>201812241909286_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
