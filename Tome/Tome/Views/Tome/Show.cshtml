@@ -12,8 +12,8 @@
 <h4>@Model.ReferredTome.CreationDate</h4>
 @Html.ActionLink("Edit Tome", "Edit", "Tome", new { @id = Model.ReferredTome.TomeId }, new { @class = "btn btn-primary btn-large" })
 
+@Html.Raw(File.ReadAllText(Model.TomeContent.Content))
 
-@Html.Raw(Model.TomeContent.Content)
 
 
 

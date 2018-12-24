@@ -26,48 +26,144 @@ namespace Tome.Controllers
         public ActionResult Index()
         {
             var tomes = (from tome in db.Tomes
-                orderby tome.CreationDate
-                select tome).OrderBy(r => Guid.NewGuid()).Take(5);
+                         orderby tome.CreationDate
+                         select tome).OrderBy(r => r.CreationDate);
+            ViewBag.Tomes = tomes;
+
+            return View();
+        }
+
+        public ActionResult Search(String searchedText)
+        {
+            var tomes = (from tome in db.Tomes
+                         where tome.Name.Contains(searchedText)
+                         orderby tome.CreationDate
+                         select tome);
 
             ViewBag.Tomes = tomes;
 
             return View();
         }
 
-        /*
-        public ActionResult Index(bool sortByNameAsc)
+        public ActionResult IndexByName(bool sortByNameAsc)
         {
 
             List<Models.Tome> tomes;
 
             if (sortByNameAsc)
             {
-                tomes= (from tome in db.Tomes
-                    orderby tome.Name
-                    select tome).ToList();
+                tomes = (from tome in db.Tomes
+                         orderby tome.Name
+                         select tome).ToList();
             }
             else
             {
                 tomes = (from tome in db.Tomes
-                    orderby tome.Name descending
-                    select tome).ToList();
+                         orderby tome.Name descending
+                         select tome).ToList();
             }
 
             ViewBag.Tomes = tomes;
 
             return View();
         }
-        */
-   
-        public ActionResult Search(String searchedText)
+
+        public ActionResult IndexByDate(bool sortByDateAsc)
         {
-            var tomes = (from tome in db.Tomes
-                where tome.Name.Contains(searchedText)
-                select tome);
+
+            List<Models.Tome> tomes;
+
+            if (sortByDateAsc)
+            {
+                tomes = (from tome in db.Tomes
+                         orderby tome.CreationDate
+                         select tome).ToList();
+            }
+            else
+            {
+                tomes = (from tome in db.Tomes
+                         orderby tome.CreationDate descending
+                         select tome).ToList();
+            }
 
             ViewBag.Tomes = tomes;
 
             return View();
+        }
+
+
+        public ActionResult SearchByTag(int TagId)
+        {
+            List<Models.Tome> tomes;
+
+            tomes = (from tome in db.Tomes
+                join tagRef in db.TagReferences on tome.TomeId equals tagRef.TomeId
+                join tag in db.Tags on tagRef.TagId equals tag.TagId
+                orderby tome.CreationDate
+                select tome).ToList();
+
+            ViewBag.Tomes = tomes;
+
+            return View();
+
+
+        }
+
+        public ActionResult SearchByTagName(int TagId, bool sortByNameAsc)
+        {
+            List<Models.Tome> tomes;
+
+
+            if(sortByNameAsc)
+            { tomes = (from tome in db.Tomes
+                join tagRef in db.TagReferences on tome.TomeId equals tagRef.TomeId
+                join tag in db.Tags on tagRef.TagId equals tag.TagId
+                orderby tome.Name
+                select tome).ToList();
+            }
+            else
+            {
+                tomes = (from tome in db.Tomes
+                    join tagRef in db.TagReferences on tome.TomeId equals tagRef.TomeId
+                    join tag in db.Tags on tagRef.TagId equals tag.TagId
+                    orderby tome.Name descending
+                    select tome).ToList();
+
+            }
+            ViewBag.Tomes = tomes;
+
+            return View();
+
+
+        }
+
+        public ActionResult SearchByTagDate(int TagId, bool sortByDateAsc)
+        {
+            List<Models.Tome> tomes;
+
+
+            if (sortByDateAsc)
+            {
+                tomes = (from tome in db.Tomes
+                    join tagRef in db.TagReferences on tome.TomeId equals tagRef.TomeId
+                    join tag in db.Tags on tagRef.TagId equals tag.TagId
+                    orderby tome.CreationDate
+                    select tome).ToList();
+            }
+            else
+            {
+                tomes = (from tome in db.Tomes
+                    join tagRef in db.TagReferences on tome.TomeId equals tagRef.TomeId
+                    join tag in db.Tags on tagRef.TagId equals tag.TagId
+                    orderby tome.CreationDate descending
+                    select tome).ToList();
+
+            }
+            ViewBag.Tomes = tomes;
+
+            return View();
+
+
         }
 
         [HttpGet]
@@ -81,13 +177,13 @@ namespace Tome.Controllers
                 ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
 
                 var roleName = (from userroles in db.UserRoles
-                    join roles in db.Roles on userroles.RoleId equals roles.Id
-                    where userroles.UserId == currentUserId
-                    select roles.Name).FirstOrDefault();
+                                join roles in db.Roles on userroles.RoleId equals roles.Id
+                                where userroles.UserId == currentUserId
+                                select roles.Name).FirstOrDefault();
 
                 var currentTome = (from tome in db.Tomes
-                    where tome.TomeId == id
-                    select tome).SingleOrDefault();
+                                   where tome.TomeId == id
+                                   select tome).SingleOrDefault();
 
                 if (currentTome.IsPrivate == true && (currentUserId == null ||
                                                       (currentUser != currentTome.ApplicationUser &&
@@ -99,23 +195,21 @@ namespace Tome.Controllers
 
 
                 int currentHistory = (from version in db.CurrentVersions
-                    where version.TomeId == id
-                    select version.TomeHistoryId).SingleOrDefault();
+                                      where version.TomeId == id
+                                      select version.TomeHistoryId).SingleOrDefault();
 
 
                 var currentTomeHistory = (from tomeHistory in db.TomeHistories
-                    where tomeHistory.Id == currentHistory
-                    select tomeHistory).SingleOrDefault();
+                                          where tomeHistory.Id == currentHistory
+                                          select tomeHistory).SingleOrDefault();
 
                 TomeViewModel currentTomeViewModel = new TomeViewModel();
 
                 currentTomeViewModel.ReferredTome = db.Tomes.Find(id);
                 currentTomeViewModel.TomeContent = new TomeContent();
 
-                String filePath = currentTomeHistory.FilePath.Replace(@"\\", @"\");
-                currentTomeViewModel.TomeContent.Content = HttpUtility.HtmlDecode(System.IO.File.ReadAllText(filePath));
-                 //Regex.Replace(System.IO.File.ReadAllText(filePath), @"<\s*/\s*\w+>", "");
-                ViewBag.filePathHtml = filePath;
+                currentTomeViewModel.TomeContent.Content = currentTomeHistory.FilePath;
+
                 return View(currentTomeViewModel);
 
             }
@@ -132,16 +226,14 @@ namespace Tome.Controllers
         public ActionResult Add()
         {
             Models.TomeViewModel newTomeViewModel = new TomeViewModel();
-            //Editor TextEditor = new Editor(System.Web.HttpContext.Current, "Editor");
 
-            //TextEditor.LoadFormData("\n A new tome has been created.\n");
-            //TextEditor.MvcInit();
 
-            newTomeViewModel.TagList =
-                new SelectList(db.Tags.Select(x => new SelectListItem {Value = x.TagId.ToString(), Text = x.TagTitle}));
+            var SelectListItems = db.Tags.Select(x => new SelectListItem { Value = x.TagId.ToString(), Text = x.TagTitle });
 
-            //ViewBag.Editor = TextEditor.MvcGetString();
+            var TagList = new List<SelectListItem>(SelectListItems);
 
+
+            newTomeViewModel.TagList = TagList;
 
             return View(newTomeViewModel);
         }
@@ -173,6 +265,19 @@ namespace Tome.Controllers
                 db.Tomes.Add(tome.ReferredTome);
                 db.SaveChanges();
 
+
+                // check if tag is non empty
+
+                if (tome.SelectedTag != 0)
+                {
+                    Tag chosenTag = db.Tags.Find(tome.SelectedTag);
+                    TagReference newReference = new TagReference();
+
+                    newReference.Tag = chosenTag;
+                    newReference.Tome = tome.ReferredTome;
+
+                    db.TagReferences.Add(newReference);
+                }
                 // create init history
 
                 TomeHistory tomeHistory = new TomeHistory
@@ -180,7 +285,7 @@ namespace Tome.Controllers
                     Tome = tome.ReferredTome,
                     FilePath = path + BASE_PATH + TOME_IDENTIFIER +
                                (User.Identity.GetUserName().IsEmpty() ? ("anonymous" + Request.AnonymousID) : User.Identity.GetUserName()) +
-                               "-" + DateTime.Now.ToString("yyyyMMddHHmmss"),
+                               "-" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".html",
                     ModificationDate = DateTime.Now,
                     ApplicationUser = currentUser
                 };
@@ -189,11 +294,12 @@ namespace Tome.Controllers
                 db.TomeHistories.Add(tomeHistory);
                 db.SaveChanges();
                 //Write content to file
-                string content = tome.TomeContent.Content.Replace("..", path).Replace(@"/",@"\");
+                string content = tome.TomeContent.Content.Replace("\"../uploads/", "\"../../uploads/");
+
                 System.IO.File.WriteAllText(tomeHistory.FilePath, content);
 
                 CurrentVersion currentVersion = new CurrentVersion
-                    {TomeHistory = tomeHistory, Tome = tome.ReferredTome};
+                { TomeHistory = tomeHistory, Tome = tome.ReferredTome };
                 db.CurrentVersions.Add(currentVersion);
                 db.SaveChanges();
 
@@ -266,20 +372,32 @@ namespace Tome.Controllers
                 String filePath;
 
                 Models.Tome tome = db.Tomes.Find(id);
-
                 Models.TomeViewModel editTomeViewModel = new TomeViewModel();
 
-                //Editor TextEditor = new Editor(System.Web.HttpContext.Current, "Editor");
-                
 
+                Tag selectedTag = (from tag in db.TagReferences
+                                   where tag.TomeId == id
+                                   select tag.Tag).SingleOrDefault();
+
+
+                var SelectListItems = db.Tags.Select(x => new SelectListItem { Value = x.TagId.ToString(), Text = x.TagTitle });
+
+                var TagList = new List<SelectListItem>(SelectListItems);
+
+                editTomeViewModel.TagList = TagList;
+
+                if (selectedTag != null)
+                {
+                    editTomeViewModel.SelectedTag = selectedTag.TagId;
+                }
 
                 // Find current version and get the file path
-                int currentVersion = (from version in db.CurrentVersions
-                                      where version.TomeId == id
-                                      select version.TomeHistoryId).SingleOrDefault();
+                int currentVersionId = (from version in db.CurrentVersions
+                                        where version.TomeId == id
+                                        select version.TomeHistoryId).SingleOrDefault();
 
                 filePath = (from history in db.TomeHistories
-                            where history.Id == id
+                            where history.Id == currentVersionId
                             select history.FilePath).SingleOrDefault();
 
 
@@ -287,13 +405,6 @@ namespace Tome.Controllers
                 editTomeViewModel.ReferredTome = tome;
                 Debug.WriteLine(filePath);
                 Debug.WriteLine(tomeContent);
-
-
-                //Load the contents into the editor
-
-                //TextEditor.LoadFormData(tomeContent);
-                //TextEditor.MvcInit();
-                //ViewBag.Editor = TextEditor.MvcGetString();
 
                 editTomeViewModel.ReferredTome = tome;
                 TomeContent content = new TomeContent();
@@ -330,7 +441,7 @@ namespace Tome.Controllers
                     Tome = tome,
                     FilePath = path + BASE_PATH + TOME_IDENTIFIER +
                                (User.Identity.GetUserName().IsEmpty() ? ("anonymous" + Request.AnonymousID) : User.Identity.GetUserName()) +
-                               "-" + DateTime.Now.ToString("yyyyMMddHHmmss"),
+                               "-" + DateTime.Now.ToString("yyyyMMddHHmmss") + ".html",
                     ModificationDate = DateTime.Now,
                     ApplicationUser = currentUser
                 };
@@ -341,8 +452,9 @@ namespace Tome.Controllers
 
 
                 // create file and fill with content
-                System.IO.File.WriteAllText(tomeHistory.FilePath, editedTome.TomeContent.Content);
-                
+                string content = editedTome.TomeContent.Content.Replace("\"../uploads/", "\"../../uploads/"); ;
+                System.IO.File.WriteAllText(tomeHistory.FilePath, content);
+
 
                 // update curent version
 
@@ -363,7 +475,7 @@ namespace Tome.Controllers
 
         public ActionResult Delete(int id)
         {
-            
+
             db.CurrentVersions.RemoveRange(db.CurrentVersions.Where(version => version.TomeId == id));
             db.TomeHistories.RemoveRange(db.TomeHistories.Where(history => history.TomeId == id));
             db.Tomes.Remove(db.Tomes.Find(id));

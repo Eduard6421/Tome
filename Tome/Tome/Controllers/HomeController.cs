@@ -16,48 +16,56 @@ namespace Tome.Controllers
         public ActionResult Index()
         {
             //var tomes = db.Tomes.OrderBy(elem => Guid.NewGuid()).Take(1);
-            
+
             String currentUserId = User.Identity.GetUserId();
             ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
 
-            // anonymous user session
-            if (Request.AnonymousID == "")
+            try
             {
-                var tomes = (from tome in db.Tomes
-                    where tome.IsPrivate == false
-                    orderby tome.CreationDate
-                    select tome).OrderBy(r => Guid.NewGuid()).Take(5);
-                ViewBag.Tomes = tomes;
-            }
-            else  // successfully auth user
-            {
-                var roleName = (from userroles in db.UserRoles
-                    join roles in db.Roles on userroles.RoleId equals roles.Id
-                    where userroles.UserId == currentUserId
-                    select roles.Name).FirstOrDefault();
-
-                if (roleName == "Administrator")
+                // anonymous user session
+                if (Request.AnonymousID == "")
                 {
-                    // administrator query for get all tomes
                     var tomes = (from tome in db.Tomes
-                        orderby tome.CreationDate
-                        select tome).OrderBy(r => Guid.NewGuid()).Take(5);
+                                 where tome.IsPrivate == false
+                                 orderby tome.CreationDate
+                                 select tome).OrderBy(r => Guid.NewGuid()).Take(5).AsEnumerable();
                     ViewBag.Tomes = tomes;
                 }
-                else
+                else  // successfully auth user
                 {
-                    
-                    // regular user or moderator query to get only tome where has access
-                    var tomes = (from tome in db.Tomes
-                        where tome.IsPrivate == false || tome.ApplicationUser == currentUser
-                        orderby tome.CreationDate
-                        select tome).OrderBy(r => Guid.NewGuid()).Take(5);
-                    ViewBag.Tomes = tomes;
+                    var roleName = (from userroles in db.UserRoles
+                                    join roles in db.Roles on userroles.RoleId equals roles.Id
+                                    where userroles.UserId == currentUserId
+                                    select roles.Name).FirstOrDefault();
+
+                    if (roleName == "Administrator")
+                    {
+                        // administrator query for get all tomes
+                        var tomes = (from tome in db.Tomes
+                                     orderby tome.CreationDate
+                                     select tome).OrderBy(r => Guid.NewGuid()).Take(5).AsEnumerable();
+                        ViewBag.Tomes = tomes;
+                    }
+                    else
+                    {
+
+                        // regular user or moderator query to get only tome where has access
+                        var tomes = (from tome in db.Tomes
+                                     where tome.IsPrivate == false || tome.ApplicationUser.Id == currentUserId
+                                     orderby tome.CreationDate
+                                     select tome).OrderBy(r => Guid.NewGuid()).Take(5).AsEnumerable();
+                        Console.WriteLine(tomes);
+                        Console.WriteLine(currentUser);
+                        ViewBag.Tomes = tomes;
+                    }
+
                 }
-
             }
-
-
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
 
             ViewBag.anonymous = "anonymous-" + Request.AnonymousID;
 

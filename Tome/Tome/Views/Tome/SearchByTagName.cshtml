@@ -1,0 +1,23 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+@Html.ActionLink("Create a new tome", "Add", "Tome", null, new { @class = "btn btn-primary btn-large" })
+
+
+@using (Html.BeginForm("Search", "Tome", FormMethod.Post))
+{
+    @Html.TextBox("searchedText", "Search for Tome", new { @class = "form-control", @data_val = "true", @data_val_required = "Search bar cannot be empty " })
+    <input type="submit" value="Search">
+}
+
+
+@foreach (var tome in ViewBag.Tomes)
+{
+    <h1>@tome.Name</h1>
+    @Html.ActionLink("Read", "Show", "Tome", new { @id = tome.TomeId }, new { @class = "btn btn-primary btn-large" })
+}

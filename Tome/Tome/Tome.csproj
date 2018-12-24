@@ -238,10 +238,6 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\TomeDB.mdf" />
-    <Content Include="App_Data\TomeDB_log.ldf">
-      <DependentUpon>TomeDB.mdf</DependentUpon>
-    </Content>
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -319,6 +315,11 @@
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Admin\CreateTag.cshtml" />
     <Content Include="Views\Admin\ListTags.cshtml" />
+    <Content Include="Views\Tome\IndexByName.cshtml" />
+    <Content Include="Views\Tome\IndexByDate.cshtml" />
+    <Content Include="Views\Tome\SearchByTagName.cshtml" />
+    <Content Include="Views\Tome\SearchByTagDate.cshtml" />
+    <Content Include="Views\Tome\SearchByTag.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -334,6 +335,7 @@
     <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="App_Data\" />
     <Folder Include="uploads\" />
     <Folder Include="Views\uploads\" />
   </ItemGroup>

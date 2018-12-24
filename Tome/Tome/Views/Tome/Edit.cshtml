@@ -43,31 +43,30 @@
     @Html.Raw(editor)
     <input type="submit" value="Edit">
     -->
-    <div class="form-group">
-        <div class="form-text mb-5">
-            <label for="Name">Tome Name</label>
-            @Html.TextBoxFor(m => m.ReferredTome.Name)
-            @Html.ValidationMessageFor(m => m.ReferredTome.Name, "", new { @class = "text-danger" })
-            @Html.TextBoxFor(m => m.ReferredTome.TomeId, new { @Value = referredTome, @type = "hidden" })
+<div class="form-group">
+    <div class="form-text mb-5">
+        <label for="Name">Tome Name</label>
+        @Html.TextBoxFor(m => m.ReferredTome.Name)
+        @Html.ValidationMessageFor(m => m.ReferredTome.Name, "", new { @class = "text-danger" })
+        @Html.TextBoxFor(m => m.ReferredTome.TomeId, new { @Value = referredTome, @type = "hidden" })
 
-            <!--<input type="text" class="form-control" aria-label="default" id="Name" name="Name" ria-describedby="inputGroup-sizing-default" value="" />
-            -->
-        </div>
-        <div class="form-check mb-4">
-            <!---<input class="form-check-input" type="checkbox" value="" id="defaultCheck" name="IsPrivate">-->
-            @if (Request.IsAuthenticated)
-            { 
-                @Html.CheckBoxFor(m => m.ReferredTome.IsPrivate)
-                <label class="form-check-label" for="defaultCheck"> IsPrivate </label>
-            }
-        </div>
-        @Html.TextBoxFor(m => m.TomeContent.Content, new { @id = "content_html", @row = 30, @name = "data" })
-
-
-        <button type="submit">Save Tome</button>
-
+        <!--<input type="text" class="form-control" aria-label="default" id="Name" name="Name" ria-describedby="inputGroup-sizing-default" value="" />
+        -->
     </div>
-    <!--
-    -->
+    <div class="form-check mb-4">
+        <!---<input class="form-check-input" type="checkbox" value="" id="defaultCheck" name="IsPrivate">-->
+        @if (Request.IsAuthenticated)
+        {
+            @Html.CheckBoxFor(m => m.ReferredTome.IsPrivate)
+            <label class="form-check-label" for="defaultCheck"> IsPrivate </label>
+        }
+    </div>
+    @Html.TextBoxFor(m => m.TomeContent.Content, new { @id = "content_html", @row = 30, @name = "data" })
+
+    @Html.DropDownListFor(m => m.SelectedTag, Model.TagList)
+    <button type="submit">Save Tome</button>
+
+</div>
+
 }
 @Html.ActionLink("Read", "Show", "Tome", new { id = referredTome }, new { @class = "btn btn-primary btn-large" })

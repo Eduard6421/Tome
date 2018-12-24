@@ -148,14 +148,14 @@ namespace Tome.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateTag(String tagName)
+        public ActionResult CreateTag(Tag newTag)
         {
             try
             {
-                Tag newTag = new Tag();
-                newTag.TagTitle = tagName.ToLower();
+                newTag.TagTitle = newTag.TagTitle.ToLower();
 
                 db.Tags.Add(newTag);
+                db.SaveChanges();
             }
             catch (Exception e)
             {
@@ -172,6 +172,7 @@ namespace Tome.Controllers
             {
                 var tag = db.Tags.Where(x=> x.TagId == Int32.Parse(id)).Select(x => x).SingleOrDefault();
                 db.Tags.Remove(tag);
+                db.SaveChanges();
             }
             catch (Exception e)
             {

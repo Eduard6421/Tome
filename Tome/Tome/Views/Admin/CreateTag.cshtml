@@ -6,5 +6,8 @@
 
 <h2>CreateTag</h2>
 
-
-@Html.TextBoxFor(m => m.TagTitle);
+@using (Html.BeginForm("CreateTag", "Admin", FormMethod.Post))
+{
+    @Html.TextBoxFor(m => m.TagTitle)
+    <input type="submit" value="Create Tag">
+}
