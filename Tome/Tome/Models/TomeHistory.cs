@@ -16,7 +16,7 @@ namespace Tome.Models
         public DateTime ModificationDate { get; set; }
 
         [ForeignKey("Tome")]
-        public int TomeId { get; set; }
+        public int? TomeId { get; set; }
         public virtual Tome Tome { get; set; }
 
         public string FilePath { get; set; }

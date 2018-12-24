@@ -4,3 +4,15 @@ enable-migrations -contexttypename ApplicationDbContext -Force
 add-migration -ConfigurationTypeName Tome.Migrations.Configuration "InitialCreate"
 update-database -ConfigurationTypeName Tome.Migrations.Configuration
 
+
+User auth:
+	user -> poate crea/edita/sterge(propriile tome)
+
+	-> moderator
+		-> poate da roll back la un tome anterior
+
+	-> administrator
+		-> poate sterge orice tome edita si face useri moderatori
+
+	-> anonimi
+		-> poate citi sau edita tome-uri publice

@@ -99,13 +99,13 @@ namespace Tome.Migrations
                     {
                         Id = c.Int(nullable: false, identity: true),
                         ModificationDate = c.DateTime(nullable: false),
-                        TomeId = c.Int(nullable: false),
+                        TomeId = c.Int(),
                         FilePath = c.String(),
                         UserId = c.String(maxLength: 128),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.AspNetUsers", t => t.UserId)
-                .ForeignKey("dbo.Tomes", t => t.TomeId, cascadeDelete: true)
+                .ForeignKey("dbo.Tomes", t => t.TomeId)
                 .Index(t => t.TomeId)
                 .Index(t => t.UserId);
             

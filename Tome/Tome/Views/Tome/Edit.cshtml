@@ -4,16 +4,70 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     var editor = ViewBag.Editor;
     var referredTome = @Model.ReferredTome.TomeId;
+    var content = @Model.TomeContent.Content;
 }
 
-<h2>Edit</h2>
+<script src="https://cloud.tinymce.com/stable/tinymce.min.js"></script>
 
-@using (Html.BeginForm("Edit", "Tome", FormMethod.Post))
+<script>
+    tinymce.init({
+        images_upload_url: '/Tome/Upload',
+        selector: '#content_html',
+        plugins: [
+            "advlist autolink lists link image charmap print preview hr anchor pagebreak",
+            "searchreplace wordcount visualblocks visualchars code fullscreen",
+            "insertdatetime media nonbreaking save table contextmenu directionality",
+            "emoticons template paste textcolor colorpicker textpattern imagetools"
+        ],
+    });
+
+    function upload(form) {
+        console.log(form)
+        tinymce.activeEditor.uploadImages(function (success) {
+            form.submit();
+        });
+        return false;
+    }
+
+
+</script>
+
+<h2>Edit</h2>
+@using (Html.BeginForm("Edit", "Tome", FormMethod.Post, new { onsubmit = "return upload(this);" }))
 {
+
+    <!--
     @Html.CheckBoxFor(m => m.ReferredTome.IsPrivate)
     @Html.TextBoxFor(m => m.ReferredTome.TomeId, new { @Value = referredTome, @type = "hidden" })
     @Html.Label("Is Private")
     @Html.Raw(editor)
     <input type="submit" value="Edit">
+    -->
+    <div class="form-group">
+        <div class="form-text mb-5">
+            <label for="Name">Tome Name</label>
+            @Html.TextBoxFor(m => m.ReferredTome.Name)
+            @Html.ValidationMessageFor(m => m.ReferredTome.Name, "", new { @class = "text-danger" })
+            @Html.TextBoxFor(m => m.ReferredTome.TomeId, new { @Value = referredTome, @type = "hidden" })
+
+            <!--<input type="text" class="form-control" aria-label="default" id="Name" name="Name" ria-describedby="inputGroup-sizing-default" value="" />
+            -->
+        </div>
+        <div class="form-check mb-4">
+            <!---<input class="form-check-input" type="checkbox" value="" id="defaultCheck" name="IsPrivate">-->
+            @if (Request.IsAuthenticated)
+            { 
+                @Html.CheckBoxFor(m => m.ReferredTome.IsPrivate)
+                <label class="form-check-label" for="defaultCheck"> IsPrivate </label>
+            }
+        </div>
+        @Html.TextBoxFor(m => m.TomeContent.Content, new { @id = "content_html", @row = 30, @name = "data" })
+
+
+        <button type="submit">Save Tome</button>
+
+    </div>
+    <!--
+    -->
 }
 @Html.ActionLink("Read", "Show", "Tome", new { id = referredTome }, new { @class = "btn btn-primary btn-large" })

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.WebPages;
@@ -57,17 +58,7 @@ namespace Tome.Controllers
             return View();
         }
         */
-        public ActionResult GetAll()
-        {
-            var tomes = (from tome in db.Tomes
-                orderby tome.CreationDate
-                select tome);
-
-            ViewBag.Tomes = tomes;
-
-            return View();
-        }
-
+   
         public ActionResult Search(String searchedText)
         {
             var tomes = (from tome in db.Tomes
@@ -78,7 +69,6 @@ namespace Tome.Controllers
 
             return View();
         }
-
 
         [HttpGet]
         public ActionResult Show(int id)
@@ -123,13 +113,15 @@ namespace Tome.Controllers
                 currentTomeViewModel.TomeContent = new TomeContent();
 
                 String filePath = currentTomeHistory.FilePath.Replace(@"\\", @"\");
-                currentTomeViewModel.TomeContent.Content = System.IO.File.ReadAllText(filePath);
+                currentTomeViewModel.TomeContent.Content = HttpUtility.HtmlDecode(System.IO.File.ReadAllText(filePath));
+                 //Regex.Replace(System.IO.File.ReadAllText(filePath), @"<\s*/\s*\w+>", "");
                 ViewBag.filePathHtml = filePath;
                 return View(currentTomeViewModel);
 
             }
             catch (Exception e)
             {
+                Debug.WriteLine("An error occured: " + e);
                 return RedirectToAction("Index");
             }
         }
@@ -165,8 +157,19 @@ namespace Tome.Controllers
                 ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
 
                 tome.ReferredTome.CreationDate = DateTime.Now;
-                tome.ReferredTome.ApplicationUser = currentUser;
                 tome.ReferredTome.Name = tome.ReferredTome.Name.ToLower();
+
+                if (Request.IsAuthenticated)
+                {
+                    tome.ReferredTome.ApplicationUser = currentUser;
+                    tome.ReferredTome.IsPrivate = false;
+                }
+                else
+                {
+                    // need to be null for anonymous users
+                    tome.ReferredTome.ApplicationUser = null;
+                }
+
                 db.Tomes.Add(tome.ReferredTome);
                 db.SaveChanges();
 
@@ -176,7 +179,7 @@ namespace Tome.Controllers
                 {
                     Tome = tome.ReferredTome,
                     FilePath = path + BASE_PATH + TOME_IDENTIFIER +
-                               (User.Identity.GetUserName().IsEmpty() ? "anonymous" : User.Identity.GetUserName()) +
+                               (User.Identity.GetUserName().IsEmpty() ? ("anonymous" + Request.AnonymousID) : User.Identity.GetUserName()) +
                                "-" + DateTime.Now.ToString("yyyyMMddHHmmss"),
                     ModificationDate = DateTime.Now,
                     ApplicationUser = currentUser
@@ -188,7 +191,6 @@ namespace Tome.Controllers
                 //Write content to file
                 string content = tome.TomeContent.Content.Replace("..", path).Replace(@"/",@"\");
                 System.IO.File.WriteAllText(tomeHistory.FilePath, content);
-
 
                 CurrentVersion currentVersion = new CurrentVersion
                     {TomeHistory = tomeHistory, Tome = tome.ReferredTome};
@@ -268,8 +270,7 @@ namespace Tome.Controllers
                 Models.TomeViewModel editTomeViewModel = new TomeViewModel();
 
                 //Editor TextEditor = new Editor(System.Web.HttpContext.Current, "Editor");
-
-                editTomeViewModel.ReferredTome = tome;
+                
 
 
                 // Find current version and get the file path
@@ -283,6 +284,10 @@ namespace Tome.Controllers
 
 
                 String tomeContent = System.IO.File.ReadAllText(filePath);
+                editTomeViewModel.ReferredTome = tome;
+                Debug.WriteLine(filePath);
+                Debug.WriteLine(tomeContent);
+
 
                 //Load the contents into the editor
 
@@ -291,7 +296,9 @@ namespace Tome.Controllers
                 //ViewBag.Editor = TextEditor.MvcGetString();
 
                 editTomeViewModel.ReferredTome = tome;
-
+                TomeContent content = new TomeContent();
+                content.Content = tomeContent;
+                editTomeViewModel.TomeContent = content;
 
                 return View(editTomeViewModel);
             }
@@ -304,32 +311,38 @@ namespace Tome.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(TomeViewModel editedTome, String Editor)
+        [ValidateInput(false)]
+        public ActionResult Edit(TomeViewModel editedTome)
         {
+            string path = Server.MapPath("../..");
+
             try
             {
                 string currentUserId = User.Identity.GetUserId();
                 ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
 
                 Models.Tome tome = db.Tomes.Find(editedTome.ReferredTome.TomeId);
-                Models.TomeHistory tomeHistory = new TomeHistory();
-
                 tome.CreationDate = DateTime.Now;
                 tome.IsPrivate = editedTome.ReferredTome.IsPrivate;
 
-                // register history
-                tomeHistory.Tome = tome;
-                tomeHistory.FilePath = BASE_PATH + TOME_IDENTIFIER + (User.Identity.GetUserName().IsEmpty() ? "anonymous" : User.Identity.GetUserName()) + "-" + DateTime.Now.ToString("yyyyMMddHHmmss");
-
-                // create file and fill with content
-                System.IO.File.WriteAllText(tomeHistory.FilePath, Editor);
+                TomeHistory tomeHistory = new TomeHistory
+                {
+                    Tome = tome,
+                    FilePath = path + BASE_PATH + TOME_IDENTIFIER +
+                               (User.Identity.GetUserName().IsEmpty() ? ("anonymous" + Request.AnonymousID) : User.Identity.GetUserName()) +
+                               "-" + DateTime.Now.ToString("yyyyMMddHHmmss"),
+                    ModificationDate = DateTime.Now,
+                    ApplicationUser = currentUser
+                };
 
                 // insert into db
-                tomeHistory.ModificationDate = DateTime.Now;
-                tomeHistory.ApplicationUser = currentUser;
                 db.TomeHistories.Add(tomeHistory);
                 db.SaveChanges();
 
+
+                // create file and fill with content
+                System.IO.File.WriteAllText(tomeHistory.FilePath, editedTome.TomeContent.Content);
+                
 
                 // update curent version
 

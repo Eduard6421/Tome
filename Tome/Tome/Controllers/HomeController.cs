@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.ApplicationInsights.Web;
+using Microsoft.AspNet.Identity;
 using Tome.Models;
 
 namespace Tome.Controllers
@@ -13,9 +15,52 @@ namespace Tome.Controllers
 
         public ActionResult Index()
         {
-            var tomes = db.Tomes.OrderBy(elem => Guid.NewGuid()).Take(1);
+            //var tomes = db.Tomes.OrderBy(elem => Guid.NewGuid()).Take(1);
+            
+            String currentUserId = User.Identity.GetUserId();
+            ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
 
-            ViewBag.Tomes = tomes;
+            // anonymous user session
+            if (Request.AnonymousID == "")
+            {
+                var tomes = (from tome in db.Tomes
+                    where tome.IsPrivate == false
+                    orderby tome.CreationDate
+                    select tome).OrderBy(r => Guid.NewGuid()).Take(5);
+                ViewBag.Tomes = tomes;
+            }
+            else  // successfully auth user
+            {
+                var roleName = (from userroles in db.UserRoles
+                    join roles in db.Roles on userroles.RoleId equals roles.Id
+                    where userroles.UserId == currentUserId
+                    select roles.Name).FirstOrDefault();
+
+                if (roleName == "Administrator")
+                {
+                    // administrator query for get all tomes
+                    var tomes = (from tome in db.Tomes
+                        orderby tome.CreationDate
+                        select tome).OrderBy(r => Guid.NewGuid()).Take(5);
+                    ViewBag.Tomes = tomes;
+                }
+                else
+                {
+                    
+                    // regular user or moderator query to get only tome where has access
+                    var tomes = (from tome in db.Tomes
+                        where tome.IsPrivate == false || tome.ApplicationUser == currentUser
+                        orderby tome.CreationDate
+                        select tome).OrderBy(r => Guid.NewGuid()).Take(5);
+                    ViewBag.Tomes = tomes;
+                }
+
+            }
+
+
+
+            ViewBag.anonymous = "anonymous-" + Request.AnonymousID;
+
 
             return View();
         }

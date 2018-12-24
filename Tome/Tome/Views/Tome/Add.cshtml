@@ -1,4 +1,5 @@
 ﻿@model Tome.Models.TomeViewModel
+@using Microsoft.AspNet.Identity
 @{
     ViewBag.Title = "Add";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -9,7 +10,8 @@
     tinymce.init({
         images_upload_url: '/Tome/Upload',
         selector: '#content_html',
-        plugins : [
+        encoding: "xml",
+        plugins: [
             "advlist autolink lists link image charmap print preview hr anchor pagebreak",
             "searchreplace wordcount visualblocks visualchars code fullscreen",
             "insertdatetime media nonbreaking save table contextmenu directionality",
@@ -41,10 +43,13 @@
             </div>
             <div class="form-check mb-4">
                 <!---<input class="form-check-input" type="checkbox" value="" id="defaultCheck" name="IsPrivate">-->
-                @Html.CheckBoxFor(m => m.ReferredTome.IsPrivate)
-                <label class="form-check-label" for="defaultCheck"> IsPrivate </label>
+                @if (Request.IsAuthenticated)
+                { 
+                    @Html.CheckBoxFor(m => m.ReferredTome.IsPrivate)
+                    <label class="form-check-label" for="defaultCheck"> IsPrivate </label>
+                }
             </div>
-            @Html.TextBoxFor(m => m.TomeContent.Content, new { @id = "content_html", @row = 10, @name = "data" })
+            @Html.TextBoxFor(m => m.TomeContent.Content, new { @id = "content_html", @row = 30, @name = "data" })
 
 
             <button type="submit">Save Tome</button>

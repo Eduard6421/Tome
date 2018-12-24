@@ -1,11 +1,23 @@
-﻿@{
+﻿@using Microsoft.AspNet.Identity
+@{
     ViewBag.Title = "Home Page";
 }
+<!--
+@if (Request.IsAuthenticated)
+{
+    <h1>@User.Identity.GetUserName()</h1>
+}
+else
+{
+    <h1>You are anonymous-@Request.AnonymousID</h1>
+    <h1>@ViewBag.anonymous</h1>
+}
+-->
 
-
-@foreach (var tome in ViewBag.Tomes)
+@foreach (var tome in @ViewBag.Tomes)
 {
     <h1>@tome.Name</h1>
+    @Html.ActionLink("Read", "Show", "Tome", new { id = tome.TomeId }, new { @class = "btn btn-primary btn-large" });
 }
 
 <div class="jumbotron">
