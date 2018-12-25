@@ -1,85 +1,52 @@
-﻿
+﻿@using Tome.Models
+
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <link href="~/Content/table.css" rel="stylesheet" />
-<!--
-<div class="row">
 
-    @foreach (var tome in ViewBag.Tomes)
-    {
-        <h2>@tome.Name</h2>
-        @Html.ActionLink("Read", "Show", "Tome", new { @id = tome.TomeId }, new { @class = "btn btn-primary btn-large" })
-    }
-</div>
--->
+<div class="index-menu-control">
 
 
-<div class="wrapper">
-    <div class="wrapper">
-        @for (int i = 0; i < @ViewBag.Tomes.Count; i++)
+    <div class="">
+        @if (ViewBag.Tags.Count > 0)
         {
-            if (i == 0)
-            {
-                <div class="parent" onclick="">
-                    <div class="child bg-one">
-                        <a href="@Url.Action("Show", "Tome", new { @id = @ViewBag.Tomes[i].TomeId })">@ViewBag.Tomes[i].Name</a>
-                    </div>
-                </div>
-            }
-            else if (i == 1)
+            using (Html.BeginForm("IndexByName", "Tome", FormMethod.Post))
             {
 
-                <div class="parent right" onclick="">
-                    <div class="child bg-two">
-                        <a href="@Url.Action("Show", "Tome", new { @id = @ViewBag.Tomes[i].TomeId })">@ViewBag.Tomes[i].Name</a>
-                    </div>
-                </div>
-            }
-            else if (i == 2)
-            {
 
-                <div class="parent" onclick="">
-                    <div class="child bg-three">
-                        <a href="@Url.Action("Show", "Tome", new { @id = @ViewBag.Tomes[i].TomeId })">@ViewBag.Tomes[i].Name</a>
-                    </div>
-                </div>
-            }
-            else if (i == 3)
-            {
-
-                <div class="parent right" onclick="">
-                    <div class="child bg-four">
-                        <a href="@Url.Action("Show", "Tome", new { @id = @ViewBag.Tomes[i].TomeId })">@ViewBag.Tomes[i].Name</a>
-                    </div>
-                </div>
-            }
-            else if (i == 4)
-            {
-
-                <div class="parent" onclick="">
-                    <div class="child bg-five">
-                        <a href="@Url.Action("Show", "Tome", new { @id = @ViewBag.Tomes[i].TomeId })">@ViewBag.Tomes[i].Name</a>
-                    </div>
-                </div>
-            }
-            else if (i == 5)
-            {
-
-                <div class="parent right" onclick="">
-                    <div class="child bg-six">
-                        <a href="@Url.Action("Show", "Tome", new { @id = @ViewBag.Tomes[i].TomeId })">@ViewBag.Tomes[i].Name</a>
-                    </div>
-                </div>
+                <select name="TagId">
+                    @foreach (var tag in ViewBag.Tags)
+                    {
+                        <option value="@tag.TagId">@tag.TagTitle</option>
+                    }
+                </select>
+                @Html.TextBox("sortByNameAsc", true, new { @class = "hidden" })
+                <input type="submit" value="Search for tag" />
             }
 
-            <!--
-            <h2>@ViewBag.Tomes[i].Name</h2>
-            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-            <!--<p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>--
-            -->
+        }
+
+
+    </div>
+
+
+    <div class="sort-menu">
+        @Html.ActionLink("Tome Name", "IndexByName", "Tome", new { sortByNameAsc = true }, new { @class = "index-menu-categories1" })
+        @Html.ActionLink("Creation Date", "IndexByDate", "Tome", new { sortByDateAsc = true }, new { @class = "index-menu-categories2" })
+    </div>
+
+    <div class="tome-list">
+        @foreach (var tome in ViewBag.Tomes)
+        {
+            <div class="tome-element">
+                @Html.ActionLink(((Tome)tome).Name, "Show", "Tome", new { id = tome.TomeId }, new { @class = "font-weight-bold text-capitalize index-menu-item" })
+                <p class="index-menu-item tome-date">@tome.CreationDate</p>
+            </div>
         }
     </div>
+
+
 </div>

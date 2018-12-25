@@ -28,16 +28,19 @@ namespace Tome.Controllers
             var tomes = (from tome in db.Tomes
                          orderby tome.CreationDate
                          select tome).Take(6);
+            var tags = (from tag in db.Tags
+                        select tag);
+
             String currentUserId = User.Identity.GetUserId();
             ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
             var roleName = (from userroles in db.UserRoles
-                join roles in db.Roles on userroles.RoleId equals roles.Id
-                where userroles.UserId == currentUserId
-                select roles.Name).FirstOrDefault();
+                            join roles in db.Roles on userroles.RoleId equals roles.Id
+                            where userroles.UserId == currentUserId
+                            select roles.Name).FirstOrDefault();
             ViewBag.roleAccount = roleName;
             ViewBag.Tomes = tomes.ToList();
             ViewBag.Count = tomes.Count();
-
+            ViewBag.Tags = tags.ToList();
             return View();
         }
 
@@ -47,18 +50,21 @@ namespace Tome.Controllers
                          where tome.Name.Contains(searchedText)
                          orderby tome.CreationDate
                          select tome).Take(6);
+
             String currentUserId = User.Identity.GetUserId();
             ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
             var roleName = (from userroles in db.UserRoles
-                join roles in db.Roles on userroles.RoleId equals roles.Id
-                where userroles.UserId == currentUserId
-                select roles.Name).FirstOrDefault();
+                            join roles in db.Roles on userroles.RoleId equals roles.Id
+                            where userroles.UserId == currentUserId
+                            select roles.Name).FirstOrDefault();
             ViewBag.roleAccount = roleName;
             ViewBag.Tomes = tomes.ToList();
             ViewBag.Count = tomes.Count();
 
             return View();
         }
+
+
 
         public ActionResult IndexByName(bool sortByNameAsc)
         {
@@ -80,14 +86,58 @@ namespace Tome.Controllers
             String currentUserId = User.Identity.GetUserId();
             ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
             var roleName = (from userroles in db.UserRoles
-                join roles in db.Roles on userroles.RoleId equals roles.Id
-                where userroles.UserId == currentUserId
-                select roles.Name).FirstOrDefault();
+                            join roles in db.Roles on userroles.RoleId equals roles.Id
+                            where userroles.UserId == currentUserId
+                            select roles.Name).FirstOrDefault();
             ViewBag.roleAccount = roleName;
             ViewBag.Tomes = tomes;
+            ViewBag.sortedByName = sortByNameAsc;
 
             return View();
         }
+
+
+        [HttpPost]
+        public ActionResult IndexByName(String TagId, bool sortByNameAsc)
+        {
+
+            List<Models.Tome> tomes = new List<Models.Tome>();
+            if (sortByNameAsc)
+            {
+                tomes = (from refs in db.TagReferences
+                    join tag in db.Tags on refs.TagId equals tag.TagId
+                    join tome in db.Tomes on refs.TomeId equals tome.TomeId
+                    where tag.TagId == Int32.Parse(TagId)
+                    orderby tome.Name
+                    select tome).ToList();
+            }
+            else
+            {
+                tomes = (from refs in db.TagReferences
+                    join tag in db.Tags on refs.TagId equals tag.TagId
+                    join tome in db.Tomes on refs.TomeId equals tome.TomeId
+                    where tag.TagId == Int32.Parse(TagId)
+                    orderby tome.Name descending
+                    select tome).ToList();
+            }
+
+            String currentUserId = User.Identity.GetUserId();
+            ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
+            var roleName = (from userroles in db.UserRoles
+                join roles in db.Roles on userroles.RoleId equals roles.Id
+                where userroles.UserId == currentUserId
+                select roles.Name).FirstOrDefault();
+
+            ViewBag.roleAccount = roleName;
+            ViewBag.sortByNameAsc = sortByNameAsc;
+            ViewBag.Tomes = tomes.ToList();
+            ViewBag.TagId = TagId;
+
+            return View();
+
+
+        }
+
 
         public ActionResult IndexByDate(bool sortByDateAsc)
         {
@@ -109,14 +159,58 @@ namespace Tome.Controllers
             String currentUserId = User.Identity.GetUserId();
             ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
             var roleName = (from userroles in db.UserRoles
-                join roles in db.Roles on userroles.RoleId equals roles.Id
-                where userroles.UserId == currentUserId
-                select roles.Name).FirstOrDefault();
+                            join roles in db.Roles on userroles.RoleId equals roles.Id
+                            where userroles.UserId == currentUserId
+                            select roles.Name).FirstOrDefault();
             ViewBag.roleAccount = roleName;
             ViewBag.Tomes = tomes;
+            ViewBag.sortedByDateAsc = sortByDateAsc;
 
             return View();
         }
+
+        [HttpPost]
+        public ActionResult IndexByDate(String TagId, bool sortByDateAsc)
+        {
+
+            List<Models.Tome> tomes = new List<Models.Tome>();
+            if (sortByDateAsc)
+            {
+                tomes = (from refs in db.TagReferences
+                    join tag in db.Tags on refs.TagId equals tag.TagId
+                    join tome in db.Tomes on refs.TomeId equals tome.TomeId
+                    where tag.TagId == Int32.Parse(TagId)
+                    orderby tome.CreationDate
+                    select tome).ToList();
+            }
+            else
+            {
+                tomes = (from refs in db.TagReferences
+                    join tag in db.Tags on refs.TagId equals tag.TagId
+                    join tome in db.Tomes on refs.TomeId equals tome.TomeId
+                    where tag.TagId == Int32.Parse(TagId)
+                    orderby tome.CreationDate descending
+                    select tome).ToList();
+            }
+
+            String currentUserId = User.Identity.GetUserId();
+            ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
+            var roleName = (from userroles in db.UserRoles
+                join roles in db.Roles on userroles.RoleId equals roles.Id
+                where userroles.UserId == currentUserId
+                select roles.Name).FirstOrDefault();
+
+            ViewBag.roleAccount = roleName;
+            ViewBag.sortByNameAsc = sortByDateAsc;
+            ViewBag.Tomes = tomes.ToList();
+            ViewBag.TagId = TagId;
+
+            return View();
+
+
+        }
+
+
 
 
         public ActionResult SearchByTag(int TagId)
@@ -124,16 +218,16 @@ namespace Tome.Controllers
             List<Models.Tome> tomes;
 
             tomes = (from tome in db.Tomes
-                join tagRef in db.TagReferences on tome.TomeId equals tagRef.TomeId
-                join tag in db.Tags on tagRef.TagId equals tag.TagId
-                orderby tome.CreationDate
-                select tome).ToList();
+                     join tagRef in db.TagReferences on tome.TomeId equals tagRef.TomeId
+                     join tag in db.Tags on tagRef.TagId equals tag.TagId
+                     orderby tome.CreationDate
+                     select tome).ToList();
             String currentUserId = User.Identity.GetUserId();
             ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
             var roleName = (from userroles in db.UserRoles
-                join roles in db.Roles on userroles.RoleId equals roles.Id
-                where userroles.UserId == currentUserId
-                select roles.Name).FirstOrDefault();
+                            join roles in db.Roles on userroles.RoleId equals roles.Id
+                            where userroles.UserId == currentUserId
+                            select roles.Name).FirstOrDefault();
             ViewBag.roleAccount = roleName;
             ViewBag.Tomes = tomes;
 
@@ -142,6 +236,8 @@ namespace Tome.Controllers
 
         }
 
+
+        /*
         public ActionResult SearchByTagName(int TagId, bool sortByNameAsc)
         {
             List<Models.Tome> tomes;
@@ -171,6 +267,7 @@ namespace Tome.Controllers
                 select roles.Name).FirstOrDefault();
             ViewBag.roleAccount = roleName;
             ViewBag.Tomes = tomes;
+            ViewBag.sortedByName = sortByNameAsc;
 
             return View();
 
@@ -207,11 +304,14 @@ namespace Tome.Controllers
                 select roles.Name).FirstOrDefault();
             ViewBag.roleAccount = roleName;
             ViewBag.Tomes = tomes;
+            ViewBag.sortedByDateAsc = sortByDateAsc;
 
             return View();
 
 
         }
+
+            */
 
         [HttpGet]
         public ActionResult Show(int id)
@@ -221,7 +321,7 @@ namespace Tome.Controllers
                 String currentUserId = User.Identity.GetUserId();
 
                 ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
-                
+
                 var roleName = (from userroles in db.UserRoles
                                 join roles in db.Roles on userroles.RoleId equals roles.Id
                                 where userroles.UserId == currentUserId
@@ -279,7 +379,7 @@ namespace Tome.Controllers
                 return RedirectToAction("Index");
             }
         }
-        
+
 
         [HttpGet]
         [ValidateInput(true)]
@@ -298,9 +398,9 @@ namespace Tome.Controllers
             String currentUserId = User.Identity.GetUserId();
             ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
             var roleName = (from userroles in db.UserRoles
-                join roles in db.Roles on userroles.RoleId equals roles.Id
-                where userroles.UserId == currentUserId
-                select roles.Name).FirstOrDefault();
+                            join roles in db.Roles on userroles.RoleId equals roles.Id
+                            where userroles.UserId == currentUserId
+                            select roles.Name).FirstOrDefault();
             ViewBag.roleAccount = roleName;
             return View(newTomeViewModel);
         }
@@ -322,7 +422,7 @@ namespace Tome.Controllers
                     TempData["Alert"] = "A tome with this name already exists.";
                     return RedirectToAction("Add");
                 }
-                
+
 
                 tome.ReferredTome.CreationDate = DateTime.Now;
                 tome.ReferredTome.Name = tome.ReferredTome.Name.ToLower();
@@ -379,7 +479,7 @@ namespace Tome.Controllers
                 db.CurrentVersions.Add(currentVersion);
                 db.SaveChanges();
 
-                return RedirectToAction("Show", new{id = tome.ReferredTome.TomeId});
+                return RedirectToAction("Show", new { id = tome.ReferredTome.TomeId });
             }
             catch (Exception e)
             {
@@ -492,9 +592,9 @@ namespace Tome.Controllers
                 String currentUserId = User.Identity.GetUserId();
                 ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
                 var roleName = (from userroles in db.UserRoles
-                    join roles in db.Roles on userroles.RoleId equals roles.Id
-                    where userroles.UserId == currentUserId
-                    select roles.Name).FirstOrDefault();
+                                join roles in db.Roles on userroles.RoleId equals roles.Id
+                                where userroles.UserId == currentUserId
+                                select roles.Name).FirstOrDefault();
                 ViewBag.roleAccount = roleName;
 
                 return View(editTomeViewModel);
@@ -563,12 +663,21 @@ namespace Tome.Controllers
 
         public ActionResult Delete(int id)
         {
+            try
+            {
+                db.CurrentVersions.RemoveRange(db.CurrentVersions.Where(version => version.TomeId == id));
+                db.TomeHistories.RemoveRange(db.TomeHistories.Where(history => history.TomeId == id));
+                db.Tomes.Remove(db.Tomes.Find(id));
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                TempData["Alert"] = "An error occured: TomeController Delete Post";
+                Console.WriteLine(e);
+                throw;
 
-            db.CurrentVersions.RemoveRange(db.CurrentVersions.Where(version => version.TomeId == id));
-            db.TomeHistories.RemoveRange(db.TomeHistories.Where(history => history.TomeId == id));
-            db.Tomes.Remove(db.Tomes.Find(id));
+            }
 
-            db.SaveChanges();
             return RedirectToAction("Index");
         }
 

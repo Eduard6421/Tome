@@ -1,23 +1,37 @@
-﻿
+﻿@using Tome.Models
+
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+<link href="~/Content/table.css" rel="stylesheet" />
 
-@Html.ActionLink("Create a new tome", "Add", "Tome", null, new { @class = "btn btn-primary btn-large" })
+<div class="index-menu-control">
+
+    <div class="sort-menu">
+        
+
+        @if ((bool) ViewBag.sortedByName)
+        {
+            @Html.ActionLink("Tome Name", "IndexByName", "Tome", new {sortByNameAsc = false}, new {@class = "index-menu-categories1"})
+        }
+        else
+        {
+            @Html.ActionLink("Tome Name", "IndexByName", "Tome", new {sortByNameAsc = true}, new {@class = "index-menu-categories1"})
+        }
+
+        @Html.ActionLink("Creation Date", "IndexByDate", "Tome", new {sortByDateAsc = true}, new {@class = "index-menu-categories2"})
+    </div>
+
+    <div class="tome-list">
+        @foreach (var tome in ViewBag.Tomes)
+        {<div class="tome-element">
+             @Html.ActionLink(((Tome)tome).Name, "Show", "Tome", new { id = tome.TomeId }, new { @class = "font-weight-bold text-capitalize index-menu-item" })
+             <p class="index-menu-item tome-date">@tome.CreationDate</p>
+         </div>
+        }
+    </div>
 
 
-@using (Html.BeginForm("Search", "Tome", FormMethod.Post))
-{
-    @Html.TextBox("searchedText", "Search for Tome", new { @class = "form-control", @data_val = "true", @data_val_required = "Search bar cannot be empty " })
-    <input type="submit" value="Search">
-}
-
-
-@foreach (var tome in ViewBag.Tomes)
-{
-    <h1>@tome.Name</h1>
-    @Html.ActionLink("Read", "Show", "Tome", new { @id = tome.TomeId }, new { @class = "btn btn-primary btn-large" })
-}
+</div>

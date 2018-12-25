@@ -34,6 +34,10 @@ body {
     background-color: #2980b9;
 }
 
+.navbar-inverse {
+    background-color: #383636 !important;
+}
+
 #searchedText {
     width: 400px;
 }
@@ -126,4 +130,47 @@ body {
 .btn-control {
     margin-right: 5px;
     margin-bottom: 10%;
+}
+
+
+.index-menu-control {
+    background-color: white;
+    padding-top: 2%;
+}
+
+
+
+.index-menu-categories1 {
+    font-weight: 400;
+    font-size: 1.5vw;
+    margin-top: 2%;
+    margin-left: 1vw;
+}
+
+.index-menu-categories2 {
+    position: relative;
+    font-weight: 400;
+    font-size: 1.5vw;
+    float: right;
+    text-align: right;
+    margin-right: 1vw;
+}
+
+.tome-element {
+    display: flex;
+}
+
+.tome-date {
+    margin-left: auto;
+
+}
+.index-menu-item {
+    padding-top: 2%;
+    padding-bottom: 2%;
+    margin-left: 2.5%;
+}
+
+
+.sort-menu {
+    margin-bottom: 2%;
 }

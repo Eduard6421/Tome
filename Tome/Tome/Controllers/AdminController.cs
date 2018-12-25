@@ -145,7 +145,7 @@ namespace Tome.Controllers
 
         [HttpGet]
         public ActionResult ListTags()
-        {
+        {   
             List<Tag> tagList = new List<Tag>();
 
             tagList = db.Tags.Select(x => x).ToList();
