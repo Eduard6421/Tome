@@ -30,21 +30,18 @@
     }
 </script>
 
-<div class="pb-2 mt-4 mb-2 border border-bottom">
-    <h2>Create a new tome</h2>
-</div>
-@using (Html.BeginForm("Add", "Tome", FormMethod.Post, new { onsubmit = "return upload(this);" }))
-{
+<div class="form-style">
+    @using (Html.BeginForm("Add", "Tome", FormMethod.Post, new { onsubmit = "return upload(this);" }))
+    {
         <div class="form-group">
             <div class="form-text mb-5">
                 <div class="form-group">
-                    <label for="Name" class="col-md-2 control-label">Tome Name</label>
-                    @Html.TextBoxFor(m => m.ReferredTome.Name)
+                    <label for="Name" class="label-control-title">Tome Name</label>
+                    @Html.TextBoxFor(m => m.ReferredTome.Name,new {@class="form-control input-control"})
                     @Html.ValidationMessageFor(m => m.ReferredTome.Name, "", new { @class = "text-danger" })
                 </div>
             </div>
             <div class="form-check">
-                <!---<input class="form-check-input" type="checkbox" value="" id="defaultCheck" name="IsPrivate">-->
                 @if (Request.IsAuthenticated)
                 {
                     <div class="form-group">
@@ -55,15 +52,17 @@
             </div>
 
             @Html.TextBoxFor(m => m.TomeContent.Content, new { @id = "content_html", @row = 60, @name = "data" })
-            <div class="form-group" style="margin-top: 2%;">
-                <label for="Name" class="control-label">Tag:</label>
-                @Html.DropDownListFor(m => m.SelectedTag, Model.TagList)
+            <div class="form-group">
+                <label for="Name" class="control-label label-control-tag">Tag</label>
+                @Html.DropDownListFor(m => m.SelectedTag, Model.TagList, new { @class = "form-control input-control" })
             </div>
 
             <button type="submit" class="btn btn-primary btn-large center-block">Save Tome</button>
 
         </div>
-}
+    }
+</div>
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/deleteAdvertisment.js"></script>
 }

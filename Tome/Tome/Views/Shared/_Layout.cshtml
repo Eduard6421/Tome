@@ -36,8 +36,11 @@
 
             @using (Html.BeginForm("Search", "Tome", FormMethod.Post, new { @class = "form-inline nav navbar-nav form-search" }))
             {
-                @Html.TextBox("searchedText", "Search for Tome", new { @class = "form-control mr-sm-2", @data_val = "true", @placeholder = "Search", @data_val_required = "Search bar cannot be empty " })
-                <input class="btn btn-outline-success my-2 my-sm-0" type="submit" value="Search">
+
+                <div>
+                @Html.TextBox("searchedText", "", new { @class = "form-control input-sm", @data_val = "true", @placeholder = "Search for Tome", @data_val_required = "Search bar cannot be empty " })
+                <input class="btn btn-primary btn-sm search-btn" type="submit" value="Search">
+                </div>
             }
 
             @Html.Partial("_LoginPartial")
