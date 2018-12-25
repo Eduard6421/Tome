@@ -32,7 +32,11 @@ namespace Tome.Controllers
 
                     var tags = (from tag in db.Tags
                         select tag);
-                    
+
+                    var refss = (from tome in db.Tomes
+                        join refs in db.TagReferences on tome.TomeId equals refs.TagId
+                        join tag in db.Tags on refs.TomeId equals tag.TagId).ToDictionary(x => x.tome.Tome);
+
 
                     ViewBag.Tomes = tomes.ToList();
                     ViewBag.Count = tomes.Count();
