@@ -7,21 +7,50 @@
 
 <link href="~/Content/table.css" rel="stylesheet" />
 
+
+<style>
+    .thead-dark {
+        background-color: #383636;
+    }
+</style>
+
 <div class="index-menu-control">
 
-    <div class="sort-menu">
-        @Html.ActionLink("Tome Name", "IndexByName", "Tome", new { sortByNameAsc = true }, new { @class = "index-menu-categories1" })
-        @Html.ActionLink("Creation Date", "IndexByDate", "Tome", new { sortByDateAsc = true }, new { @class = "index-menu-categories2" })
-    </div>
 
+
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">@Html.ActionLink("Tome Name", "IndexByName", "Tome", new { sortByNameAsc = true }, new { @class = "" })</th>
+                <th scope="col">@Html.ActionLink("Creation Date", "IndexByDate", "Tome", new { sortByDateAsc = true }, new { @class = "" })</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var tome in ViewBag.Tomes)
+            {
+                <tr>
+                    <th scope="row">@Html.ActionLink(((Tome)tome).Name, "Show", "Tome", new { id = tome.TomeId }, new { @class = "" })</th>
+                    <td>@tome.CreationDate</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+
+
+
+
+
+    <!--
     <div class="tome-list">
         @foreach (var tome in ViewBag.Tomes)
         {<div class="tome-element">
              @Html.ActionLink(((Tome)tome).Name, "Show", "Tome", new { id = tome.TomeId }, new { @class = "font-weight-bold text-capitalize index-menu-item" })
-             <p class="index-menu-item tome-date">@tome.CreationDate</p>
+             <p class="index-menu-item tome-date custom-row">@tome.CreationDate</p>
          </div>
         }
     </div>
-
+    -->
 
 </div>

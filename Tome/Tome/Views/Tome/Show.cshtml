@@ -39,11 +39,8 @@
             }
             else if (@ViewBag.roleAccount == "User")
             {
-                if (@ViewBag.AuthUser)
-                {
-                    @Html.ActionLink("Edit Tome", "Edit", "Tome", new { @id = Model.ReferredTome.TomeId }, new { @class = "btn btn-primary btn-large btn-control" })
-                    @Html.ActionLink("History", "Index", "History", new { @id = Model.ReferredTome.TomeId }, new { @class = "btn btn-primary btn-large btn-control" })
-                }
+                @Html.ActionLink("Edit Tome", "Edit", "Tome", new { @id = Model.ReferredTome.TomeId }, new { @class = "btn btn-primary btn-large btn-control" })
+                @Html.ActionLink("History", "Index", "History", new { @id = Model.ReferredTome.TomeId }, new { @class = "btn btn-primary btn-large btn-control" })
             }
 
         }

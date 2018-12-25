@@ -414,6 +414,13 @@ namespace Tome.Controllers
             string path = Server.MapPath("..");
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    TempData["Alert"] = "Fill all required fields.";
+                    return RedirectToAction("Add");
+                }
+                
+
                 string currentUserId = User.Identity.GetUserId();
                 ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
 
