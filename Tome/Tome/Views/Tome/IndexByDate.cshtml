@@ -10,24 +10,61 @@
 <div class="index-menu-control">
 
     <div class="sort-menu">
-        @Html.ActionLink("Tome Name", "IndexByName", "Tome", new { sortByNameAsc = true }, new { @class = "index-menu-categories1" })
-        @if ((bool)@ViewBag.sortedByDateAsc)
+
+        @if (@ViewBag.TagId != null)
         {
-            @Html.ActionLink("Creation Date", "IndexByDate", "Tome", new { sortByDateAsc = false }, new { @class = "index-menu-categories2" })}
+            using (Html.BeginForm("IndexByName", "Tome", FormMethod.Post))
+            {
+
+                @Html.TextBox("TagId", (String)@ViewBag.TagId, new { @class = "hidden" })
+                @Html.CheckBox("sortByNameAsc", true, new { @class = "hidden", @value = true })
+                <input type="submit" value="Tome Name" class="index-menu-categories1" />
+            }
+
+            using (Html.BeginForm("IndexByDate", "Tome", FormMethod.Post))
+            {
+
+                @Html.TextBox("TagId", (String)@ViewBag.TagId, new { @class = "hidden" })
+                if (ViewBag.sortByDateAsc == true)
+                {
+                    @Html.CheckBox("sortByDateAsc", new { @class = "hidden", @checked = false, @value = false  })
+                }
+                else
+                {
+                    @Html.CheckBox("sortByDateAsc", new { @class = "hidden", @checked = true, @value = true })
+
+                 }
+                <input type = "submit" value = "Creation Date" class="index-menu-categories2" />
+            }
+
+
+        }
+
         else
         {
-            @Html.ActionLink("Creation Date", "IndexByDate", "Tome", new { sortByDateAsc = true }, new { @class = "index-menu-categories2" })
-        }
-    </div>
+            @Html.ActionLink("Tome Name", "IndexByName", "Tome", new { sortByNameAsc = true }, new { @class = "index-menu-categories1" })
+            if (ViewBag.sortByDateAsc == true)
+            {
+                @Html.ActionLink("Creation Date", "IndexByDate", "Tome", new { sortByDateAsc = false }, new { @class = "index-menu-categories2" })
+            }
+            else
+            {
+                @Html.ActionLink("Creation Date", "IndexByDate", "Tome", new { sortByDateAsc = true }, new { @class = "index-menu-categories2" })
+            }
 
-    <div class="tome-list">
-        @foreach (var tome in ViewBag.Tomes)
-        {<div class="tome-element">
-                @Html.ActionLink(((Tome)tome).Name, "Show", "Tome", new { id = tome.TomeId }, new { @class = "font-weight-bold text-capitalize index-menu-item" })
-                <p class="index-menu-item tome-date">@tome.CreationDate</p>
-            </div>
+
         }
     </div>
+</div>
+
+<div class="tome-list">
+    @foreach (var tome in ViewBag.Tomes)
+    {<div class="tome-element">
+            @Html.ActionLink(((Tome)tome).Name, "Show", "Tome", new { id = tome.TomeId }, new { @class = "font-weight-bold text-capitalize index-menu-item" })
+            <p class="index-menu-item tome-date">@tome.CreationDate</p>
+        </div>
+    }
+</div>
 
 
 </div>

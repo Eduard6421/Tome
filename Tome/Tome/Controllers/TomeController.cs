@@ -91,7 +91,7 @@ namespace Tome.Controllers
                             select roles.Name).FirstOrDefault();
             ViewBag.roleAccount = roleName;
             ViewBag.Tomes = tomes;
-            ViewBag.sortedByName = sortByNameAsc;
+            ViewBag.sortByNameAsc = sortByNameAsc;
 
             return View();
         }
@@ -102,12 +102,14 @@ namespace Tome.Controllers
         {
 
             List<Models.Tome> tomes = new List<Models.Tome>();
+
+            int tagId = Int32.Parse(TagId);
             if (sortByNameAsc)
             {
                 tomes = (from refs in db.TagReferences
                     join tag in db.Tags on refs.TagId equals tag.TagId
                     join tome in db.Tomes on refs.TomeId equals tome.TomeId
-                    where tag.TagId == Int32.Parse(TagId)
+                    where tag.TagId == tagId
                     orderby tome.Name
                     select tome).ToList();
             }
@@ -116,7 +118,7 @@ namespace Tome.Controllers
                 tomes = (from refs in db.TagReferences
                     join tag in db.Tags on refs.TagId equals tag.TagId
                     join tome in db.Tomes on refs.TomeId equals tome.TomeId
-                    where tag.TagId == Int32.Parse(TagId)
+                    where tag.TagId == tagId
                     orderby tome.Name descending
                     select tome).ToList();
             }
@@ -164,7 +166,7 @@ namespace Tome.Controllers
                             select roles.Name).FirstOrDefault();
             ViewBag.roleAccount = roleName;
             ViewBag.Tomes = tomes;
-            ViewBag.sortedByDateAsc = sortByDateAsc;
+            ViewBag.sortByDateAsc = sortByDateAsc;
 
             return View();
         }
@@ -172,15 +174,15 @@ namespace Tome.Controllers
         [HttpPost]
         public ActionResult IndexByDate(String TagId, bool sortByDateAsc)
         {
-
+            int tagId = Int32.Parse(TagId);
             List<Models.Tome> tomes = new List<Models.Tome>();
             if (sortByDateAsc)
             {
                 tomes = (from refs in db.TagReferences
                     join tag in db.Tags on refs.TagId equals tag.TagId
                     join tome in db.Tomes on refs.TomeId equals tome.TomeId
-                    where tag.TagId == Int32.Parse(TagId)
-                    orderby tome.CreationDate
+                    where tag.TagId == tagId
+                         orderby tome.CreationDate
                     select tome).ToList();
             }
             else
@@ -188,8 +190,8 @@ namespace Tome.Controllers
                 tomes = (from refs in db.TagReferences
                     join tag in db.Tags on refs.TagId equals tag.TagId
                     join tome in db.Tomes on refs.TomeId equals tome.TomeId
-                    where tag.TagId == Int32.Parse(TagId)
-                    orderby tome.CreationDate descending
+                    where tag.TagId == tagId
+                         orderby tome.CreationDate descending
                     select tome).ToList();
             }
 
@@ -201,7 +203,7 @@ namespace Tome.Controllers
                 select roles.Name).FirstOrDefault();
 
             ViewBag.roleAccount = roleName;
-            ViewBag.sortByNameAsc = sortByDateAsc;
+            ViewBag.sortByDateAsc = sortByDateAsc;
             ViewBag.Tomes = tomes.ToList();
             ViewBag.TagId = TagId;
 
