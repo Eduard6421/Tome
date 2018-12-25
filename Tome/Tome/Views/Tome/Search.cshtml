@@ -1,4 +1,5 @@
-﻿
+﻿@using Tome.Models
+
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -6,7 +7,10 @@
 
 <link href="~/Content/table.css" rel="stylesheet" />
 
-<h2>Results: </h2>
+<h2 style="color:white">Results</h2>
+
+
+
 
 <!--
 @foreach (var tome in ViewBag.Tomes)
@@ -16,70 +20,50 @@
 }
 -->
 
-<div class="wrapper">
-    <div class="wrapper">
-        @for (int i = 0; i < @ViewBag.Tomes.Count; i++)
+<style>
+    .thead-dark {
+        background-color: #383636;
+    }
+</style>
+
+<div class="index-menu-control">
+
+
+
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">@Html.ActionLink("Tome Name", "IndexByName", "Tome", new { sortByNameAsc = true }, new { @class = "" })</th>
+            <th scope="col">@Html.ActionLink("Creation Date", "IndexByDate", "Tome", new { sortByDateAsc = true }, new { @class = "" })</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var tome in ViewBag.Tomes)
         {
-            if (i == 0)
-            {
-                <div class="parent" onclick="">
-                    <div class="child bg-one">
-                        <a href="@Url.Action("Show", "Tome", new { @id = @ViewBag.Tomes[i].TomeId })">@ViewBag.Tomes[i].Name</a>
-                    </div>
-                </div>
-            }
-            else if (i == 1)
-            {
+            <tr>
+                <th scope="row">@Html.ActionLink(((Tome)tome).Name, "Show", "Tome", new { id = tome.TomeId }, new { @class = "" })</th>
+                <td>@tome.CreationDate</td>
+            </tr>
+        }
+        </tbody>
+    </table>
 
-                <div class="parent right" onclick="">
-                    <div class="child bg-two">
-                        <a href="@Url.Action("Show", "Tome", new { @id = @ViewBag.Tomes[i].TomeId })">@ViewBag.Tomes[i].Name</a>
-                    </div>
-                </div>
-            }
-            else if (i == 2)
-            {
 
-                <div class="parent" onclick="">
-                    <div class="child bg-three">
-                        <a href="@Url.Action("Show", "Tome", new { @id = @ViewBag.Tomes[i].TomeId })">@ViewBag.Tomes[i].Name</a>
-                    </div>
-                </div>
-            }
-            else if (i == 3)
-            {
 
-                <div class="parent right" onclick="">
-                    <div class="child bg-four">
-                        <a href="@Url.Action("Show", "Tome", new { @id = @ViewBag.Tomes[i].TomeId })">@ViewBag.Tomes[i].Name</a>
-                    </div>
-                </div>
-            }
-            else if (i == 4)
-            {
 
-                <div class="parent" onclick="">
-                    <div class="child bg-five">
-                        <a href="@Url.Action("Show", "Tome", new { @id = @ViewBag.Tomes[i].TomeId })">@ViewBag.Tomes[i].Name</a>
-                    </div>
-                </div>
-            }
-            else if (i == 5)
-            {
 
-                <div class="parent right" onclick="">
-                    <div class="child bg-six">
-                        <a href="@Url.Action("Show", "Tome", new { @id = @ViewBag.Tomes[i].TomeId })">@ViewBag.Tomes[i].Name</a>
-                    </div>
-                </div>
-            }
 
-            <!--
-            <h2>@ViewBag.Tomes[i].Name</h2>
-            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-            <!--<p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>--
-            -->
+
+    <!--
+    <div class="tome-list">
+        @foreach (var tome in ViewBag.Tomes)
+        {<div class="tome-element">
+             @Html.ActionLink(((Tome)tome).Name, "Show", "Tome", new { id = tome.TomeId }, new { @class = "font-weight-bold text-capitalize index-menu-item" })
+             <p class="index-menu-item tome-date custom-row">@tome.CreationDate</p>
+         </div>
         }
     </div>
+    -->
+
 </div>
 

@@ -6,8 +6,13 @@
 
 <link href="~/Content/timeline.css" rel="stylesheet" />
 
+<style>
+    .color-white {
+        color: white !important
+    }
+</style>
+
 <div class="pb-2 mt-4 mb-2 border border-bottom">
-    <h2>Create a new tome</h2>
     @if (TempData["Alert"] != null)
     {
         <div class="alert alert-danger" role="alert">
@@ -21,7 +26,7 @@
 
         <div class="timeline-month">
             @DateTime.Now.ToString("MMMM"),  @DateTime.Now.Year
-            <span>@ViewBag.TomeHistoryList.Count Entries</span>
+            <span class="color-white">@ViewBag.TomeHistoryList.Count Entries</span>
         </div>
 
         @foreach (var tomeHistory in ViewBag.TomeHistoryList)
@@ -51,16 +56,15 @@
                                     }
                                     else
                                     {
-                                        <div class="box-item"><strong>Username</strong>: @tomeHistory.ApplicationUser.Email</div>
+                                        <div class="box-item color-white"><strong>Username</strong>: @tomeHistory.ApplicationUser.Email</div>
                                     }
-                                    <div class="box-item"><strong>Start Date</strong>: @tomeHistory.ModificationDate.ToString("dd/mm/yyyy hh:mm")</div>
+                                    <div class="box-item color-white"><strong>Start Date</strong>: @tomeHistory.ModificationDate.ToString("dd/mm/yyyy hh:mm")</div>
                                     @if (ViewBag.curentVersion == tomeHistory.Id)
                                     {
                                         <div class="box-item"><strong style="color: green">Current version</strong></div>
                                     }
 
                                 </div>
-                                <div class="box-footer">- Tyler</div>
                             </div>
                         </div>
                     }

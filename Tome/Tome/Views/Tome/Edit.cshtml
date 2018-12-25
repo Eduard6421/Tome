@@ -43,17 +43,16 @@
 </script>
 
 <div class="content-control">
-    <div class="content-control-button">
-
-        @Html.ActionLink("Read", "Show", "Tome", new { id = referredTome }, new { @class = "btn btn-primary btn-large" })
-    </div>
     @using (Html.BeginForm("Edit", "Tome", FormMethod.Post, new { onsubmit = "return upload(this);" }))
-    {<h1>@Model.ReferredTome.Name</h1>
-
+    {
+        
+        <div class="content-control-button">
+            @Html.ActionLink("Read", "Show", "Tome", new { id = referredTome }, new { @class = "btn btn-primary btn-large " })
+            <h1> @Model.ReferredTome.Name</h1>
+        </div>
     <div class="form-group content-details-control">
         <div class="form-text mb-5">
             <div class="form-group">
-
                 @Html.ValidationMessageFor(m => m.ReferredTome.Name, "", new { @class = "text-danger" })
                 @Html.TextBoxFor(m => m.ReferredTome.TomeId, new { @Value = referredTome, @type = "hidden" })
             </div>

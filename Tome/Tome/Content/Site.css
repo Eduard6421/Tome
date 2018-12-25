@@ -101,12 +101,12 @@ body {
 
 .content-control {
     background-color: white;
-    padding-top: 5%;
+    padding-top: 2%;
     border-width: 1px !important;
     border-style: solid;
     border-color: black;
     margin-top: 0%;
-
+    padding-bottom: 5%;
 }
 
     .content-control h1 {
@@ -134,7 +134,6 @@ body {
 
 .index-menu-control {
     background-color: white;
-    padding-top: 5%;
 }
 
 
