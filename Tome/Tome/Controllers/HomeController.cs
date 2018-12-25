@@ -38,7 +38,7 @@ namespace Tome.Controllers
                                     join roles in db.Roles on userroles.RoleId equals roles.Id
                                     where userroles.UserId == currentUserId
                                     select roles.Name).FirstOrDefault();
-
+                    ViewBag.roleAccount = roleName;
                     if (roleName == "Administrator")
                     {
                         // administrator query for get all tomes

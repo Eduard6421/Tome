@@ -26,7 +26,7 @@
 
 
                 <!-- doar administrator -->
-                @if (Request.IsAuthenticated)
+                @if (Request.IsAuthenticated && ViewBag.roleAccount == "Administrator")
                 {
                     <li>@Html.ActionLink("Users panel", "ListUsers", "Admin")</li>
                     <li>@Html.ActionLink("Tags panel", "ListTags", "Admin")</li>

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Tome.Filters;
 using Tome.Models;
@@ -39,7 +40,13 @@ namespace Tome.Controllers
                                           Role = role.Name
                                       }).ToList();
 
-
+                String currentUserId = User.Identity.GetUserId();
+                ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
+                var roleName = (from userroles in db.UserRoles
+                    join roles in db.Roles on userroles.RoleId equals roles.Id
+                    where userroles.UserId == currentUserId
+                    select roles.Name).FirstOrDefault();
+                ViewBag.roleAccount = roleName;
                 ViewBag.usersWithRoles = usersWithRoles;
             }
             catch (Exception e)
@@ -78,7 +85,13 @@ namespace Tome.Controllers
                 db.UserRoles.Add(identity);
 
                 db.SaveChanges();
-
+                String currentUserId = User.Identity.GetUserId();
+                ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
+                var roleName = (from userroles in db.UserRoles
+                    join roles in db.Roles on userroles.RoleId equals roles.Id
+                    where userroles.UserId == currentUserId
+                    select roles.Name).FirstOrDefault();
+                ViewBag.roleAccount = roleName;
 
             }
             catch (Exception e)
@@ -106,15 +119,18 @@ namespace Tome.Controllers
                            select roles).FirstOrDefault();
 
                 Debug.WriteLine(rol.UserId);
-
                 db.UserRoles.Remove(rol);
-
                 IdentityUserRole identity = new IdentityUserRole { UserId = id, RoleId = roleId };
-
                 db.UserRoles.Add(identity);
-
                 db.SaveChanges();
 
+                String currentUserId = User.Identity.GetUserId();
+                ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
+                var roleName = (from userroles in db.UserRoles
+                    join roles in db.Roles on userroles.RoleId equals roles.Id
+                    where userroles.UserId == currentUserId
+                    select roles.Name).FirstOrDefault();
+                ViewBag.roleAccount = roleName;
 
             }
             catch (Exception e)
@@ -133,7 +149,13 @@ namespace Tome.Controllers
             List<Tag> tagList = new List<Tag>();
 
             tagList = db.Tags.Select(x => x).ToList();
-
+            String currentUserId = User.Identity.GetUserId();
+            ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
+            var roleName = (from userroles in db.UserRoles
+                join roles in db.Roles on userroles.RoleId equals roles.Id
+                where userroles.UserId == currentUserId
+                select roles.Name).FirstOrDefault();
+            ViewBag.roleAccount = roleName;
             return View(tagList);
         }
 
@@ -143,7 +165,13 @@ namespace Tome.Controllers
         {
 
             Tag newTag = new Tag();
-
+            String currentUserId = User.Identity.GetUserId();
+            ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
+            var roleName = (from userroles in db.UserRoles
+                join roles in db.Roles on userroles.RoleId equals roles.Id
+                where userroles.UserId == currentUserId
+                select roles.Name).FirstOrDefault();
+            ViewBag.roleAccount = roleName;
             return View(newTag);
         }
 
@@ -156,6 +184,14 @@ namespace Tome.Controllers
 
                 db.Tags.Add(newTag);
                 db.SaveChanges();
+
+                String currentUserId = User.Identity.GetUserId();
+                ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
+                var roleName = (from userroles in db.UserRoles
+                    join roles in db.Roles on userroles.RoleId equals roles.Id
+                    where userroles.UserId == currentUserId
+                    select roles.Name).FirstOrDefault();
+                ViewBag.roleAccount = roleName;
             }
             catch (Exception e)
             {
@@ -173,6 +209,14 @@ namespace Tome.Controllers
                 var tag = db.Tags.Where(x=> x.TagId == Int32.Parse(id)).Select(x => x).SingleOrDefault();
                 db.Tags.Remove(tag);
                 db.SaveChanges();
+
+                String currentUserId = User.Identity.GetUserId();
+                ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
+                var roleName = (from userroles in db.UserRoles
+                    join roles in db.Roles on userroles.RoleId equals roles.Id
+                    where userroles.UserId == currentUserId
+                    select roles.Name).FirstOrDefault();
+                ViewBag.roleAccount = roleName;
             }
             catch (Exception e)
             {

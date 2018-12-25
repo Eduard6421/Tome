@@ -28,6 +28,13 @@ namespace Tome.Controllers
             var tomes = (from tome in db.Tomes
                          orderby tome.CreationDate
                          select tome).Take(6);
+            String currentUserId = User.Identity.GetUserId();
+            ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
+            var roleName = (from userroles in db.UserRoles
+                join roles in db.Roles on userroles.RoleId equals roles.Id
+                where userroles.UserId == currentUserId
+                select roles.Name).FirstOrDefault();
+            ViewBag.roleAccount = roleName;
             ViewBag.Tomes = tomes.ToList();
             ViewBag.Count = tomes.Count();
 
@@ -40,7 +47,13 @@ namespace Tome.Controllers
                          where tome.Name.Contains(searchedText)
                          orderby tome.CreationDate
                          select tome).Take(6);
-
+            String currentUserId = User.Identity.GetUserId();
+            ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
+            var roleName = (from userroles in db.UserRoles
+                join roles in db.Roles on userroles.RoleId equals roles.Id
+                where userroles.UserId == currentUserId
+                select roles.Name).FirstOrDefault();
+            ViewBag.roleAccount = roleName;
             ViewBag.Tomes = tomes.ToList();
             ViewBag.Count = tomes.Count();
 
@@ -64,7 +77,13 @@ namespace Tome.Controllers
                          orderby tome.Name descending
                          select tome).ToList();
             }
-
+            String currentUserId = User.Identity.GetUserId();
+            ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
+            var roleName = (from userroles in db.UserRoles
+                join roles in db.Roles on userroles.RoleId equals roles.Id
+                where userroles.UserId == currentUserId
+                select roles.Name).FirstOrDefault();
+            ViewBag.roleAccount = roleName;
             ViewBag.Tomes = tomes;
 
             return View();
@@ -87,7 +106,13 @@ namespace Tome.Controllers
                          orderby tome.CreationDate descending
                          select tome).ToList();
             }
-
+            String currentUserId = User.Identity.GetUserId();
+            ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
+            var roleName = (from userroles in db.UserRoles
+                join roles in db.Roles on userroles.RoleId equals roles.Id
+                where userroles.UserId == currentUserId
+                select roles.Name).FirstOrDefault();
+            ViewBag.roleAccount = roleName;
             ViewBag.Tomes = tomes;
 
             return View();
@@ -103,7 +128,13 @@ namespace Tome.Controllers
                 join tag in db.Tags on tagRef.TagId equals tag.TagId
                 orderby tome.CreationDate
                 select tome).ToList();
-
+            String currentUserId = User.Identity.GetUserId();
+            ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
+            var roleName = (from userroles in db.UserRoles
+                join roles in db.Roles on userroles.RoleId equals roles.Id
+                where userroles.UserId == currentUserId
+                select roles.Name).FirstOrDefault();
+            ViewBag.roleAccount = roleName;
             ViewBag.Tomes = tomes;
 
             return View();
@@ -132,6 +163,13 @@ namespace Tome.Controllers
                     select tome).ToList();
 
             }
+            String currentUserId = User.Identity.GetUserId();
+            ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
+            var roleName = (from userroles in db.UserRoles
+                join roles in db.Roles on userroles.RoleId equals roles.Id
+                where userroles.UserId == currentUserId
+                select roles.Name).FirstOrDefault();
+            ViewBag.roleAccount = roleName;
             ViewBag.Tomes = tomes;
 
             return View();
@@ -161,6 +199,13 @@ namespace Tome.Controllers
                     select tome).ToList();
 
             }
+            String currentUserId = User.Identity.GetUserId();
+            ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
+            var roleName = (from userroles in db.UserRoles
+                join roles in db.Roles on userroles.RoleId equals roles.Id
+                where userroles.UserId == currentUserId
+                select roles.Name).FirstOrDefault();
+            ViewBag.roleAccount = roleName;
             ViewBag.Tomes = tomes;
 
             return View();
@@ -171,13 +216,12 @@ namespace Tome.Controllers
         [HttpGet]
         public ActionResult Show(int id)
         {
-
             try
             {
                 String currentUserId = User.Identity.GetUserId();
 
                 ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
-
+                
                 var roleName = (from userroles in db.UserRoles
                                 join roles in db.Roles on userroles.RoleId equals roles.Id
                                 where userroles.UserId == currentUserId
@@ -187,6 +231,8 @@ namespace Tome.Controllers
                                    where tome.TomeId == id
                                    select tome).SingleOrDefault();
 
+
+                /*
                 if (currentTome.IsPrivate == true && (currentUserId == null ||
                                                       (currentUser != currentTome.ApplicationUser &&
                                                        roleName != "Moderator" && roleName != "Administrator")))
@@ -194,7 +240,7 @@ namespace Tome.Controllers
                     //Denied Access ( bc ori nu e logat ori nu e detinatorul ori nu e moderator / administrator)
                     return RedirectToAction("Index");
                 }
-
+                */
 
                 int currentHistory = (from version in db.CurrentVersions
                                       where version.TomeId == id
@@ -212,11 +258,23 @@ namespace Tome.Controllers
 
                 currentTomeViewModel.TomeContent.Content = currentTomeHistory.FilePath;
 
+                if (currentUser == currentTome.ApplicationUser)
+                {
+                    ViewBag.AuthUser = true;
+                }
+                else
+                {
+                    ViewBag.AuthUser = false;
+                }
+
+
+                ViewBag.roleAccount = roleName;
                 return View(currentTomeViewModel);
 
             }
             catch (Exception e)
             {
+                TempData["Alert"] = "An error occured: TomeController Add Get";
                 Debug.WriteLine("An error occured: " + e);
                 return RedirectToAction("Index");
             }
@@ -237,6 +295,13 @@ namespace Tome.Controllers
 
             newTomeViewModel.TagList = TagList;
 
+            String currentUserId = User.Identity.GetUserId();
+            ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
+            var roleName = (from userroles in db.UserRoles
+                join roles in db.Roles on userroles.RoleId equals roles.Id
+                where userroles.UserId == currentUserId
+                select roles.Name).FirstOrDefault();
+            ViewBag.roleAccount = roleName;
             return View(newTomeViewModel);
         }
 
@@ -249,6 +314,15 @@ namespace Tome.Controllers
             {
                 string currentUserId = User.Identity.GetUserId();
                 ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
+
+                var resultTomes = db.Tomes.Where(x => x.Name == tome.ReferredTome.Name).SingleOrDefault();
+
+                if (resultTomes != null)
+                {
+                    TempData["Alert"] = "A tome with this name already exists.";
+                    return RedirectToAction("Add");
+                }
+                
 
                 tome.ReferredTome.CreationDate = DateTime.Now;
                 tome.ReferredTome.Name = tome.ReferredTome.Name.ToLower();
@@ -305,10 +379,11 @@ namespace Tome.Controllers
                 db.CurrentVersions.Add(currentVersion);
                 db.SaveChanges();
 
-                return RedirectToAction("Index");
+                return RedirectToAction("Show", new{id = tome.ReferredTome.TomeId});
             }
             catch (Exception e)
             {
+                TempData["Alert"] = "An error occured: TomeController Add Post";
                 Debug.WriteLine("An error occured: " + e);
                 return RedirectToAction("Index");
             }
@@ -413,10 +488,20 @@ namespace Tome.Controllers
                 content.Content = tomeContent;
                 editTomeViewModel.TomeContent = content;
 
+
+                String currentUserId = User.Identity.GetUserId();
+                ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
+                var roleName = (from userroles in db.UserRoles
+                    join roles in db.Roles on userroles.RoleId equals roles.Id
+                    where userroles.UserId == currentUserId
+                    select roles.Name).FirstOrDefault();
+                ViewBag.roleAccount = roleName;
+
                 return View(editTomeViewModel);
             }
             catch (Exception e)
             {
+                TempData["Alert"] = "An error occured: TomeController Edit Get";
                 Debug.WriteLine("An error occured: " + e);
                 return RedirectToAction("Index");
             }
@@ -467,6 +552,7 @@ namespace Tome.Controllers
             }
             catch (Exception e)
             {
+                TempData["Alert"] = "An error occured: TomeController Edit Post";
                 Console.WriteLine(e);
                 throw;
             }

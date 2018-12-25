@@ -15,6 +15,7 @@ namespace Tome.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private ApplicationDbContext db = new ApplicationDbContext();
 
         public ManageController()
         {
@@ -72,6 +73,13 @@ namespace Tome.Controllers
                 Logins = await UserManager.GetLoginsAsync(userId),
                 BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
             };
+            String currentUserId = User.Identity.GetUserId();
+            ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
+            var roleName = (from userroles in db.UserRoles
+                join roles in db.Roles on userroles.RoleId equals roles.Id
+                where userroles.UserId == currentUserId
+                select roles.Name).FirstOrDefault();
+            ViewBag.roleAccount = roleName;
             return View(model);
         }
 

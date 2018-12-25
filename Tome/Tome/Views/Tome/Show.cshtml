@@ -19,12 +19,48 @@ else
     <h4>This Tome is <span style="color: green;">public</span></h4>
 }
 <h4>Creation date: @Model.ReferredTome.CreationDate</h4>
-@Html.ActionLink("Edit Tome", "Edit", "Tome", new { @id = Model.ReferredTome.TomeId }, new { @class = "btn btn-primary btn-large" })
 
+
+<!-- User / Moderator / Admin  -->
 @if (Request.IsAuthenticated)
 {
-    @Html.ActionLink("History", "Index", "History", new {@id = Model.ReferredTome.TomeId}, new {@class = "btn btn-primary btn-large"})
+    if (@ViewBag.roleAccount == "Administrator")
+    {
+        @Html.ActionLink("Edit Tome", "Edit", "Tome", new { @id = Model.ReferredTome.TomeId }, new { @class = "btn btn-primary btn-large" })
+        @Html.ActionLink("History", "Index", "History", new { @id = Model.ReferredTome.TomeId }, new { @class = "btn btn-primary btn-large" })
+        @Html.ActionLink("Delete", "Delete", "Tome", new { @id = Model.ReferredTome.TomeId }, new { @class = "btn btn-primary btn-large" })
+    }
+    else if (@ViewBag.roleAccount == "Moderator")
+    {
+        @Html.ActionLink("Edit Tome", "Edit", "Tome", new { @id = Model.ReferredTome.TomeId }, new { @class = "btn btn-primary btn-large" })
+        @Html.ActionLink("History", "Index", "History", new { @id = Model.ReferredTome.TomeId }, new { @class = "btn btn-primary btn-large" })
+    }
+    else if (@ViewBag.roleAccount == "User")
+    {
+        if (@ViewBag.AuthUser)
+        {
+            @Html.ActionLink("Edit Tome", "Edit", "Tome", new { @id = Model.ReferredTome.TomeId }, new { @class = "btn btn-primary btn-large" })
+            @Html.ActionLink("History", "Index", "History", new { @id = Model.ReferredTome.TomeId }, new { @class = "btn btn-primary btn-large" })
+        }
+    }
+
 }
+else
+{
+    <!-- Public | Anonymous Users  -->
+    if (@Model.ReferredTome.IsPrivate == false)
+    {
+        @Html.ActionLink("Edit Tome", "Edit", "Tome", new { @id = Model.ReferredTome.TomeId }, new { @class = "btn btn-primary btn-large" })
+    }
+    else
+    {
+        <!-- Private | Anonymous Users  -->
+    }
+}
+
+
+
+
 
 <div style="margin-top: 5%; margin-bottom: 100px;">
     @Html.Raw(File.ReadAllText(Model.TomeContent.Content))
