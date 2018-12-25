@@ -47,7 +47,7 @@ body {
 }
 
 .form-style {
-    margin-top: 5%;
+    margin-top: 0;
     background-color: white;
     border-width: 3px !important;
     border-style: solid;

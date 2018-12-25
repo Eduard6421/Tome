@@ -50,7 +50,7 @@
                 <th scope="row">@Html.ActionLink(((Tome)tome).Name, "Show", "Tome", new { id = tome.TomeId }, new { @class = "" })</th>
                 <td>@tome.CreationDate</td>
                 <th scope="col"></th>
-                <th scope="col">@ViewBag[@tome]</th>
+                <th scope="col">@ViewBag.Map[@tome]</th>
             </tr>
         }
         </tbody>

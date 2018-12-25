@@ -4,16 +4,17 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@Html.ActionLink("Create Tag", "CreateTag", "Admin", null, new { @class = "btn btn-primary btn-large" })
-<h1 class="text-center" style="margin-top: 30px; display: inline-flex; padding-left: 36%;">Tags</h1>
-<table class="table" style="margin-top: 25px; margin-bottom: 100px;">
-    <thead>
+<div style="background-color: white;">
+    @Html.ActionLink("Create Tag", "CreateTag", "Admin", null, new { @class = "btn btn-primary btn-large" })
+    <h1 class="text-center" style="margin-top: 30px; display: inline-flex; padding-left: 36%;">Tags</h1>
+    <table class="table" style="margin-top: 25px; margin-bottom: 100px;">
+        <thead>
         <tr>
             <th scope="col">Tag name</th>
             <th scope="col">Actions</th>
         </tr>
-    </thead>
-    <tbody>
+        </thead>
+        <tbody>
         @foreach (var tag in Model)
         {
             <tr>
@@ -21,5 +22,6 @@
                 <th>@Html.ActionLink("Delete Tag", "DeleteTag", "Admin", new { @id = @tag.TagId }, new { @class = "btn btn-primary btn-large" })</th>
             </tr>
         }
-    </tbody>
-</table>
+        </tbody>
+    </table>
+</div>

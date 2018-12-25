@@ -7,14 +7,19 @@
     .default-label {
         margin-left: 0 !important;
     }
+
+    .backgroung-color-white {
+        background-color: white
+    }
 </style>
 
-<h2>@ViewBag.Title.</h2>
 
-@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal backgroung-color-white", role = "form" }))
 {
+    <br/>
+    <h2>&nbsp;&nbsp;&nbsp;@ViewBag.Title.</h2>
     @Html.AntiForgeryToken()
-    <h4>Create a new account.</h4>
+    <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Create a new account.</h4>
     <hr />
     @Html.ValidationSummary("", new { @class = "text-danger" })
     <div class="form-group">
@@ -40,6 +45,7 @@
             <input type="submit" class="btn btn-default" value="Register" />
         </div>
     </div>
+    <br />
 }
 
 @section Scripts {

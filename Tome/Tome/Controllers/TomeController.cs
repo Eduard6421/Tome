@@ -643,11 +643,7 @@ namespace Tome.Controllers
                 var TagList = new List<SelectListItem>(SelectListItems);
 
                 editTomeViewModel.TagList = TagList;
-
-                if (selectedTag != null)
-                {
-                    editTomeViewModel.SelectedTag = selectedTag.TagId;
-                }
+                
 
                 // Find current version and get the file path
                 int currentVersionId = (from version in db.CurrentVersions
@@ -713,6 +709,28 @@ namespace Tome.Controllers
                     ModificationDate = DateTime.Now,
                     ApplicationUser = currentUser
                 };
+
+
+                
+                Models.TomeViewModel editTomeViewModel = new TomeViewModel();
+
+                var selectedTag = (from tag in db.TagReferences
+                                   where tag.TomeId == tome.TomeId
+                                   select tag).SingleOrDefault();
+
+
+
+                var SelectListItems = db.Tags.Select(x => new SelectListItem { Value = x.TagId.ToString(), Text = x.TagTitle });
+                var TagList = new List<SelectListItem>(SelectListItems);
+
+                editTomeViewModel.TagList = TagList;
+                
+                if (selectedTag != null)
+                {
+                    selectedTag.TagId = editedTome.SelectedTag;
+                    db.SaveChanges();
+                }
+
 
                 // insert into db
                 db.TomeHistories.Add(tomeHistory);

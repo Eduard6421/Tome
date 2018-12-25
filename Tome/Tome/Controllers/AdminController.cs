@@ -206,7 +206,8 @@ namespace Tome.Controllers
         {
             try
             {
-                var tag = db.Tags.Where(x=> x.TagId == Int32.Parse(id)).Select(x => x).SingleOrDefault();
+                Int32 Id = Int32.Parse(id);
+                var tag = db.Tags.Where(x=> x.TagId == Id).Select(x => x).SingleOrDefault();
                 db.Tags.Remove(tag);
                 db.SaveChanges();
 
