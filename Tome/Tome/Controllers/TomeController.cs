@@ -27,8 +27,9 @@ namespace Tome.Controllers
         {
             var tomes = (from tome in db.Tomes
                          orderby tome.CreationDate
-                         select tome).OrderBy(r => r.CreationDate);
-            ViewBag.Tomes = tomes;
+                         select tome).Take(6);
+            ViewBag.Tomes = tomes.ToList();
+            ViewBag.Count = tomes.Count();
 
             return View();
         }
@@ -38,9 +39,10 @@ namespace Tome.Controllers
             var tomes = (from tome in db.Tomes
                          where tome.Name.Contains(searchedText)
                          orderby tome.CreationDate
-                         select tome);
+                         select tome).Take(6);
 
-            ViewBag.Tomes = tomes;
+            ViewBag.Tomes = tomes.ToList();
+            ViewBag.Count = tomes.Count();
 
             return View();
         }
@@ -219,7 +221,7 @@ namespace Tome.Controllers
                 return RedirectToAction("Index");
             }
         }
-
+        
 
         [HttpGet]
         [ValidateInput(true)]
@@ -254,11 +256,11 @@ namespace Tome.Controllers
                 if (Request.IsAuthenticated)
                 {
                     tome.ReferredTome.ApplicationUser = currentUser;
-                    tome.ReferredTome.IsPrivate = false;
                 }
                 else
                 {
                     // need to be null for anonymous users
+                    tome.ReferredTome.IsPrivate = false;
                     tome.ReferredTome.ApplicationUser = null;
                 }
 

@@ -4,29 +4,25 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
-@foreach (var user in ViewBag.usersWithRoles)
-{
-    <h1>@user.Username</h1>
-    <h1>@user.Role</h1>
-    <h1>@user.Id</h1>
-
-    @Html.ActionLink(
-        "Promote",
-        "Promote",
-        "Account",
-        new 
+<h1 class="text-center" style="margin-top: 30px;">Users</h1>
+<table class="table" style="margin-top: 25px; margin-bottom: 100px;">
+    <thead>
+        <tr>
+            <th scope="col">Username</th>
+            <th scope="col">Role</th>
+            <th scope="col">Id</th>
+            <th scope="col">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in ViewBag.usersWithRoles)
         {
-            id = @user.Id
-        },null);
-
-    @Html.ActionLink(
-        "Demote",
-        "Demote",
-        "Account",
-        new
-        {
-            id = @user.Id
-        },null);
-
-}
+            <tr>
+                <th>@user.Username</th>
+                <th>@user.Role</th>
+                <th>@user.Id</th>
+                <th >@Html.ActionLink("Promote", "Promote", "Admin", new { id = @user.Id }, new { @class = "btn btn-primary btn-large" } ) @Html.ActionLink("Demote", "Demote", "Admin", new { id = @user.Id }, new { @class = "btn btn-primary btn-large" })</th>
+            </tr>
+        }
+        </tbody>
+</table>

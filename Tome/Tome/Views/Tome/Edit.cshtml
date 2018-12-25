@@ -19,7 +19,10 @@
             "insertdatetime media nonbreaking save table contextmenu directionality",
             "emoticons template paste textcolor colorpicker textpattern imagetools"
         ],
+        toolbar: "undo redo | forecolor backcolor | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | table | fontsizeselect ",
+        height: "500",
     });
+
 
     function upload(form) {
         console.log(form)
@@ -32,41 +35,41 @@
 
 </script>
 
-<h2>Edit</h2>
+
+<div class="pb-2 mt-4 mb-2 border border-bottom">
+    <h2>Edit</h2>
+    @Html.ActionLink("Read", "Show", "Tome", new { id = referredTome }, new { @class = "btn btn-primary btn-large" })
+</div>
+<br />
 @using (Html.BeginForm("Edit", "Tome", FormMethod.Post, new { onsubmit = "return upload(this);" }))
 {
+    <div class="form-group">
+        <div class="form-text mb-5">
+            <div class="form-group">
+                <label for="Name" class="col-md-2 control-label">Tome Name</label>
+                @Html.TextBoxFor(m => m.ReferredTome.Name)
+                @Html.ValidationMessageFor(m => m.ReferredTome.Name, "", new { @class = "text-danger" })
+                @Html.TextBoxFor(m => m.ReferredTome.TomeId, new { @Value = referredTome, @type = "hidden" })
+            </div>
+        </div>
+        <div class="form-check">
+            <!---<input class="form-check-input" type="checkbox" value="" id="defaultCheck" name="IsPrivate">-->
+            @if (Request.IsAuthenticated)
+            {
+                <div class="form-group">
+                    @Html.CheckBoxFor(m => m.ReferredTome.IsPrivate)
+                    <label class="form-check-label" for="defaultCheck"> IsPrivate </label>
+                </div>
+            }
+        </div>
 
-    <!--
-    @Html.CheckBoxFor(m => m.ReferredTome.IsPrivate)
-    @Html.TextBoxFor(m => m.ReferredTome.TomeId, new { @Value = referredTome, @type = "hidden" })
-    @Html.Label("Is Private")
-    @Html.Raw(editor)
-    <input type="submit" value="Edit">
-    -->
-<div class="form-group">
-    <div class="form-text mb-5">
-        <label for="Name">Tome Name</label>
-        @Html.TextBoxFor(m => m.ReferredTome.Name)
-        @Html.ValidationMessageFor(m => m.ReferredTome.Name, "", new { @class = "text-danger" })
-        @Html.TextBoxFor(m => m.ReferredTome.TomeId, new { @Value = referredTome, @type = "hidden" })
+        @Html.TextBoxFor(m => m.TomeContent.Content, new { @id = "content_html", @row = 60, @name = "data" })
+        <div class="form-group" style="margin-top: 2%;">
+            <label for="Name" class="control-label">Tag:</label>
+            @Html.DropDownListFor(m => m.SelectedTag, Model.TagList)
+        </div>
 
-        <!--<input type="text" class="form-control" aria-label="default" id="Name" name="Name" ria-describedby="inputGroup-sizing-default" value="" />
-        -->
+        <button type="submit" class="btn btn-primary btn-large center-block">Save Tome</button>
+
     </div>
-    <div class="form-check mb-4">
-        <!---<input class="form-check-input" type="checkbox" value="" id="defaultCheck" name="IsPrivate">-->
-        @if (Request.IsAuthenticated)
-        {
-            @Html.CheckBoxFor(m => m.ReferredTome.IsPrivate)
-            <label class="form-check-label" for="defaultCheck"> IsPrivate </label>
-        }
-    </div>
-    @Html.TextBoxFor(m => m.TomeContent.Content, new { @id = "content_html", @row = 30, @name = "data" })
-
-    @Html.DropDownListFor(m => m.SelectedTag, Model.TagList)
-    <button type="submit">Save Tome</button>
-
-</div>
-
 }
-@Html.ActionLink("Read", "Show", "Tome", new { id = referredTome }, new { @class = "btn btn-primary btn-large" })

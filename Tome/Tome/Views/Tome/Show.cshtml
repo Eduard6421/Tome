@@ -1,19 +1,34 @@
 ﻿@model Tome.Models.TomeViewModel
+@using Microsoft.AspNet.Identity
+
 @{
     ViewBag.Title = "Show";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Tome content</h2>
 
 
-<h2>@Model.ReferredTome.Name</h2>
-<h4>@Model.ReferredTome.IsPrivate</h4>
-<h4>@Model.ReferredTome.CreationDate</h4>
+<h2 class="text-center">@Model.ReferredTome.Name</h2>
+
+@if (@Model.ReferredTome.IsPrivate)
+{
+    <h4>This Tome is <span style="color: red;">private</span></h4>
+}
+else
+{
+    <h4>This Tome is <span style="color: green;">public</span></h4>
+}
+<h4>Creation date: @Model.ReferredTome.CreationDate</h4>
 @Html.ActionLink("Edit Tome", "Edit", "Tome", new { @id = Model.ReferredTome.TomeId }, new { @class = "btn btn-primary btn-large" })
 
-@Html.Raw(File.ReadAllText(Model.TomeContent.Content))
+@if (Request.IsAuthenticated)
+{
+    @Html.ActionLink("History", "Index", "History", new {@id = Model.ReferredTome.TomeId}, new {@class = "btn btn-primary btn-large"})
+}
 
+<div style="margin-top: 5%; margin-bottom: 100px;">
+    @Html.Raw(File.ReadAllText(Model.TomeContent.Content))
+</div>
 
 
 

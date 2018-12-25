@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Tome.Filters;
 using Tome.Models;
 
 namespace Tome.Controllers
@@ -13,6 +14,8 @@ namespace Tome.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: History
+        [HttpGet]
+        [AccessDeniedAuthorize(Roles = "Administrator,Moderator")]
         public ActionResult Index(int id)
         {
             try
@@ -32,9 +35,9 @@ namespace Tome.Controllers
         }
 
         [HttpPost]
+        [AccessDeniedAuthorize(Roles = "Administrator,Moderator")]
         public ActionResult ChangeVersion(int id, int idHistory)
         {
-
             try
             {
                 var currentTomeHistory = (from currentVersion in db.CurrentVersions
@@ -44,7 +47,6 @@ namespace Tome.Controllers
                 currentTomeHistory.TomeHistoryId = idHistory;
 
                 db.SaveChanges();
-
             }
             catch (Exception e)
             {

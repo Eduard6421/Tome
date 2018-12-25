@@ -4,10 +4,21 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>CreateTag</h2>
+<style>
+    footer {
+        padding-top: 20%;
+    }
+</style>
+<div class="form-group">
+    <h2 class="text-center" style="margin-top: 50px;">Create a new tag</h2>
+    <div class="col-md-7">
+        @using (Html.BeginForm("CreateTag", "Admin", FormMethod.Post))
+        {
+            <label for="Name" class="control-label">Tag Name: </label>
+            @Html.TextBoxFor(m => m.TagTitle, new { @class = "form-control" })
 
-@using (Html.BeginForm("CreateTag", "Admin", FormMethod.Post))
-{
-    @Html.TextBoxFor(m => m.TagTitle)
-    <input type="submit" value="Create Tag">
-}
+            <br />
+            <input class="btn btn-primary btn-large" type="submit" value="Create Tag">
+        }
+    </div>
+</div>

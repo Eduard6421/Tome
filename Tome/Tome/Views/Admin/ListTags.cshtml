@@ -4,17 +4,22 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>ListTags</h2>
-
-@foreach (var tag in Model)
-{
-    @tag.TagTitle
-    @Html.ActionLink(
-        "Delete Tag",
-        "DeleteTag",
-        "Account",
-        new 
+@Html.ActionLink("Create Tag", "CreateTag", "Admin", null, new { @class = "btn btn-primary btn-large" })
+<h1 class="text-center" style="margin-top: 30px; display: inline-flex; padding-left: 36%;">Tags</h1>
+<table class="table" style="margin-top: 25px; margin-bottom: 100px;">
+    <thead>
+        <tr>
+            <th scope="col">Tag name</th>
+            <th scope="col">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var tag in Model)
         {
-            id = @tag.TagId
-        },null);
-}
+            <tr>
+                <th>@tag.TagTitle</th>
+                <th>@Html.ActionLink("Delete Tag", "DeleteTag", "Admin", new { @id = @tag.TagId }, new { @class = "btn btn-primary btn-large" })</th>
+            </tr>
+        }
+    </tbody>
+</table>

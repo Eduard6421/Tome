@@ -248,6 +248,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\error.css" />
     <Content Include="Content\table.css" />
+    <Content Include="Content\timeline.css" />
     <Content Include="Docs\Migration-docs.txt" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
