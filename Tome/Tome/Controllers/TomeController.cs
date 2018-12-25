@@ -37,10 +37,20 @@ namespace Tome.Controllers
                             join roles in db.Roles on userroles.RoleId equals roles.Id
                             where userroles.UserId == currentUserId
                             select roles.Name).FirstOrDefault();
+            var map = (from tome in db.Tomes
+                join refs in db.TagReferences on tome.TomeId equals refs.TomeId into newjoin
+                from tomesnref in newjoin.DefaultIfEmpty()
+                join tag in db.Tags on tomesnref.TagId equals tag.TagId into result
+                from ended in result.DefaultIfEmpty()
+                select new { newTome = tome, newTag = (ended.TagTitle == null ? "No category" : ended.TagTitle) }).ToDictionary(x => x.newTome, x => x.newTag);
+
+
+
             ViewBag.roleAccount = roleName;
             ViewBag.Tomes = tomes.ToList();
             ViewBag.Count = tomes.Count();
             ViewBag.Tags = tags.ToList();
+            ViewBag.Map = map;
             return View();
         }
 
@@ -57,10 +67,19 @@ namespace Tome.Controllers
                             join roles in db.Roles on userroles.RoleId equals roles.Id
                             where userroles.UserId == currentUserId
                             select roles.Name).FirstOrDefault();
+
+            var map = (from tome in db.Tomes
+                join refs in db.TagReferences on tome.TomeId equals refs.TomeId into newjoin
+                from tomesnref in newjoin.DefaultIfEmpty()
+                join tag in db.Tags on tomesnref.TagId equals tag.TagId into result
+                from ended in result.DefaultIfEmpty()
+                select new { newTome = tome, newTag = (ended.TagTitle == null ? "No category" : ended.TagTitle) }).ToDictionary(x => x.newTome, x => x.newTag);
+
+
             ViewBag.roleAccount = roleName;
             ViewBag.Tomes = tomes.ToList();
             ViewBag.Count = tomes.Count();
-
+            ViewBag.Map = map;
             return View();
         }
 
@@ -89,9 +108,19 @@ namespace Tome.Controllers
                             join roles in db.Roles on userroles.RoleId equals roles.Id
                             where userroles.UserId == currentUserId
                             select roles.Name).FirstOrDefault();
+
+
+            var map = (from tome in db.Tomes
+                join refs in db.TagReferences on tome.TomeId equals refs.TomeId into newjoin
+                from tomesnref in newjoin.DefaultIfEmpty()
+                join tag in db.Tags on tomesnref.TagId equals tag.TagId into result
+                from ended in result.DefaultIfEmpty()
+                select new { newTome = tome, newTag = (ended.TagTitle == null ? "No category" : ended.TagTitle) }).ToDictionary(x => x.newTome, x => x.newTag);
+
             ViewBag.roleAccount = roleName;
             ViewBag.Tomes = tomes;
             ViewBag.sortByNameAsc = sortByNameAsc;
+            ViewBag.Map = map;
 
             return View();
         }
@@ -130,10 +159,18 @@ namespace Tome.Controllers
                 where userroles.UserId == currentUserId
                 select roles.Name).FirstOrDefault();
 
+            var map = (from tome in db.Tomes
+                join refs in db.TagReferences on tome.TomeId equals refs.TomeId into newjoin
+                from tomesnref in newjoin.DefaultIfEmpty()
+                join tag in db.Tags on tomesnref.TagId equals tag.TagId into result
+                from ended in result.DefaultIfEmpty()
+                select new { newTome = tome, newTag = (ended.TagTitle == null ? "No category" : ended.TagTitle) }).ToDictionary(x => x.newTome, x => x.newTag);
+
             ViewBag.roleAccount = roleName;
             ViewBag.sortByNameAsc = sortByNameAsc;
             ViewBag.Tomes = tomes.ToList();
             ViewBag.TagId = TagId;
+            ViewBag.Map = map;
 
             return View();
 
@@ -164,9 +201,18 @@ namespace Tome.Controllers
                             join roles in db.Roles on userroles.RoleId equals roles.Id
                             where userroles.UserId == currentUserId
                             select roles.Name).FirstOrDefault();
+
+            var map = (from tome in db.Tomes
+                join refs in db.TagReferences on tome.TomeId equals refs.TomeId into newjoin
+                from tomesnref in newjoin.DefaultIfEmpty()
+                join tag in db.Tags on tomesnref.TagId equals tag.TagId into result
+                from ended in result.DefaultIfEmpty()
+                select new { newTome = tome, newTag = (ended.TagTitle == null ? "No category" : ended.TagTitle) }).ToDictionary(x => x.newTome, x => x.newTag);
+
             ViewBag.roleAccount = roleName;
             ViewBag.Tomes = tomes;
             ViewBag.sortByDateAsc = sortByDateAsc;
+            ViewBag.Map = map;
 
             return View();
         }
@@ -202,10 +248,18 @@ namespace Tome.Controllers
                 where userroles.UserId == currentUserId
                 select roles.Name).FirstOrDefault();
 
+            var map = (from tome in db.Tomes
+                join refs in db.TagReferences on tome.TomeId equals refs.TomeId into newjoin
+                from tomesnref in newjoin.DefaultIfEmpty()
+                join tag in db.Tags on tomesnref.TagId equals tag.TagId into result
+                from ended in result.DefaultIfEmpty()
+                select new { newTome = tome, newTag = (ended.TagTitle == null ? "No category" : ended.TagTitle) }).ToDictionary(x => x.newTome, x => x.newTag);
+
             ViewBag.roleAccount = roleName;
             ViewBag.sortByDateAsc = sortByDateAsc;
             ViewBag.Tomes = tomes.ToList();
             ViewBag.TagId = TagId;
+            ViewBag.Map = map;
 
             return View();
 
@@ -230,8 +284,20 @@ namespace Tome.Controllers
                             join roles in db.Roles on userroles.RoleId equals roles.Id
                             where userroles.UserId == currentUserId
                             select roles.Name).FirstOrDefault();
+
+            var map = (from tome in db.Tomes
+                join refs in db.TagReferences on tome.TomeId equals refs.TomeId into newjoin
+                from tomesnref in newjoin.DefaultIfEmpty()
+                join tag in db.Tags on tomesnref.TagId equals tag.TagId into result
+                from ended in result.DefaultIfEmpty()
+                select new { newTome = tome, newTag = (ended.TagTitle == null ? "No category" : ended.TagTitle) }).ToDictionary(x => x.newTome, x => x.newTag);
+
+
+
+
             ViewBag.roleAccount = roleName;
             ViewBag.Tomes = tomes;
+            ViewBag.Map = map;
 
             return View();
 
@@ -333,6 +399,11 @@ namespace Tome.Controllers
                                    where tome.TomeId == id
                                    select tome).SingleOrDefault();
 
+                var tagRef = (from tome in db.Tomes
+                    join tagR in db.TagReferences on tome.TomeId equals tagR.TomeId
+                    where tome.TomeId == id
+                    select tagR.Tag.TagTitle).FirstOrDefault();
+
 
                 /*
                 if (currentTome.IsPrivate == true && (currentUserId == null ||
@@ -369,8 +440,9 @@ namespace Tome.Controllers
                     ViewBag.AuthUser = false;
                 }
 
-
+                
                 ViewBag.roleAccount = roleName;
+                ViewBag.TagTome = tagRef;
                 return View(currentTomeViewModel);
 
             }

@@ -33,14 +33,18 @@ namespace Tome.Controllers
                     var tags = (from tag in db.Tags
                         select tag);
 
-                    var refss = (from tome in db.Tomes
-                        join refs in db.TagReferences on tome.TomeId equals refs.TagId
-                        join tag in db.Tags on refs.TomeId equals tag.TagId).ToDictionary(x => x.tome.Tome);
-
+                    var map = (from tome in db.Tomes
+                        join refs in db.TagReferences on tome.TomeId equals refs.TomeId into newjoin
+                        from tomesnref in newjoin.DefaultIfEmpty()
+                        join tag in db.Tags on tomesnref.TagId equals tag.TagId into result
+                        from ended in result.DefaultIfEmpty()
+                        select new { newTome = tome, newTag = (ended.TagTitle == null ? "No category" : ended.TagTitle) }).ToDictionary(x => x.newTome, x => x.newTag);
+                    
 
                     ViewBag.Tomes = tomes.ToList();
                     ViewBag.Count = tomes.Count();
                     ViewBag.Tags = tags.ToList();
+                    ViewBag.Map = map;
                 }
                 else  // successfully auth user
                 {
@@ -52,8 +56,16 @@ namespace Tome.Controllers
                     var tags = (from tag in db.Tags
                         select tag);
 
+                    var map = (from tome in db.Tomes
+                        join refs in db.TagReferences on tome.TomeId equals refs.TomeId into newjoin
+                        from tomesnref in newjoin.DefaultIfEmpty()
+                        join tag in db.Tags on tomesnref.TagId equals tag.TagId into result
+                        from ended in result.DefaultIfEmpty()
+                        select new { newTome = tome, newTag = (ended.TagTitle == null ? "No category" : ended.TagTitle) }).ToDictionary(x => x.newTome, x => x.newTag);
+
                     ViewBag.roleAccount = roleName;
                     ViewBag.Tags = tags.ToList();
+                    ViewBag.Map = map;
                     if (roleName == "Administrator")
                     {
                         // administrator query for get all tomes

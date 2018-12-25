@@ -23,6 +23,16 @@
         <h4>Creation date: @Model.ReferredTome.CreationDate</h4>
 
 
+        @if (@ViewBag.TagTome == null)
+        {
+            <h4>Category: No Category</h4>
+        }
+        else
+        {
+            <h4>Category: @ViewBag.TagTome</h4>
+        }
+
+
         <!-- User / Moderator / Admin  -->
         @if (Request.IsAuthenticated)
         {
@@ -56,9 +66,6 @@
                 <!-- Private | Anonymous Users  -->
             }
         }
-
-
-
 
 
         <div>

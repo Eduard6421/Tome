@@ -17,6 +17,9 @@
         background: transparent;
         border: none;
     }
+    .custom-color-white {
+        color:white
+    }
 </style>
 
 <div class="index-menu-control">
@@ -58,7 +61,10 @@
                         <th scope="col">@Html.ActionLink("Creation Date", "IndexByDate", "Tome", new { sortByDateAsc = true }, new { @class = "" })</th>
                     }
                 }
+                <th scope="col"></th>
+                <th scope="col" class="custom-color-white">Category</th>
             </tr>
+             
         </thead>
         <tbody>
         @foreach (var tome in ViewBag.Tomes)
@@ -66,6 +72,8 @@
             <tr>
                 <th scope="row">@Html.ActionLink(((Tome)tome).Name, "Show", "Tome", new { id = tome.TomeId }, new { @class = "" })</th>
                 <td>@tome.CreationDate</td>
+                <td></td>
+                <td>@ViewBag.Map[@tome]</td>
             </tr>
         }
         </tbody>
