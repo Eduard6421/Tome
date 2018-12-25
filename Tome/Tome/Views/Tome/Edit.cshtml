@@ -8,7 +8,14 @@
 }
 
 <script src="https://cloud.tinymce.com/stable/tinymce.min.js"></script>
-
+<style>
+    .custom-row {
+        margin-bottom: 50px;
+    }
+    .custom-checkbox {
+        height: 20px;
+    }
+</style>
 <script>
     tinymce.init({
         images_upload_url: '/Tome/Upload',
@@ -42,6 +49,7 @@
     </div>
     @using (Html.BeginForm("Edit", "Tome", FormMethod.Post, new { onsubmit = "return upload(this);" }))
     {<h1>@Model.ReferredTome.Name</h1>
+
     <div class="form-group content-details-control">
         <div class="form-text mb-5">
             <div class="form-group">
@@ -54,9 +62,9 @@
             <!---<input class="form-check-input" type="checkbox" value="" id="defaultCheck" name="IsPrivate">-->
             @if (Request.IsAuthenticated)
             {
-                <div class="form-group checkbox">
-                    @Html.CheckBoxFor(m => m.ReferredTome.IsPrivate, new { @class = "form-control" })
-                    <label class="form-check-label" for="defaultCheck"> IsPrivate </label>
+                <div class="form-group checkbox custom-row">
+                    @Html.CheckBoxFor(m => m.ReferredTome.IsPrivate, new { @class = "form-control custom-checkbox" })
+                    <label class="form-check-label" for="defaultCheck"> Make tome protected </label>
                 </div>
             }
         </div>

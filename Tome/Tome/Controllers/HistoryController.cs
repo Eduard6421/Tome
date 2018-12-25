@@ -16,7 +16,7 @@ namespace Tome.Controllers
 
         // GET: History
         [HttpGet]
-        [AccessDeniedAuthorize(Roles = "Administrator,Moderator")]
+        [AccessDeniedAuthorize(Roles = "Administrator,Moderator,User")]
         public ActionResult Index(int id)
         {
             try
@@ -51,7 +51,7 @@ namespace Tome.Controllers
         }
 
         [HttpGet]
-        [AccessDeniedAuthorize(Roles = "Administrator,Moderator")]
+        [AccessDeniedAuthorize(Roles = "Administrator,Moderator,User")]
         public ActionResult ChangeVersion(int id, int idHistory)
         {
             try
@@ -75,7 +75,7 @@ namespace Tome.Controllers
         }
 
         [HttpGet]
-        [AccessDeniedAuthorize(Roles = "Administrator,Moderator")]
+        [AccessDeniedAuthorize(Roles = "Administrator,Moderator,User")]
         public ActionResult DeleteVersion(int id, int idHistory)
         {
             try
