@@ -7,61 +7,74 @@
 
 <link href="~/Content/table.css" rel="stylesheet" />
 
+
+<style>
+    .thead-dark {
+        background-color: #383636;
+    }
+    .button-custom {
+        color: #337ab7;
+        background: transparent;
+        border: none;
+    }
+</style>
+
 <div class="index-menu-control">
 
-    <div class="sort-menu">
-
-        @if (@ViewBag.TagId != null)
-        {
-
-            using (Html.BeginForm("IndexByName", "Tome", FormMethod.Post))
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            @if (@ViewBag.TagId != null)
             {
 
-                 @Html.TextBox("TagId", (String)@ViewBag.TagId, new { @class = "hidden" })
+                using (Html.BeginForm("IndexByName", "Tome", FormMethod.Post))
+                {
+
+                    @Html.TextBox("TagId", (String)@ViewBag.TagId, new { @class = "hidden" })
+                    if (ViewBag.sortByNameAsc == true)
+                    {
+                        @Html.CheckBox("sortByNameAsc", new { @class = "hidden" , @checked = false , @value = false})
+                    }
+                    else
+                    {
+                        @Html.CheckBox("sortByNameAsc", new { @class = "hidden" , @checked = true, @value = true })
+
+                    }
+                    <th scope="col"><input type="submit" value="Tome Nam" class="button-custom" /></th>
+                }
+                using (Html.BeginForm("IndexByDate", "Tome", FormMethod.Post))
+                {
+                    @Html.TextBox("TagId", (String)@ViewBag.TagId, new { @class = "hidden" })
+                    @Html.CheckBox("sortByDateAsc",  new { @class = "hidden" , @checked = true, @value = true})
+                    <th scope="col"><input type="submit" value="Creation Date" class="button-custom" /></th>
+                }
+            }
+
+            else
+            {
                 if (ViewBag.sortByNameAsc == true)
                 {
-                    @Html.CheckBox("sortByNameAsc", new { @class = "hidden" , @checked = false , @value = false})
+                    <th scope="col">@Html.ActionLink("Tome Name", "IndexByName", "Tome", new { sortByNameAsc = false }, new { @class = "" })</th>
                 }
                 else
                 {
-                    @Html.CheckBox("sortByNameAsc", new { @class = "hidden" , @checked = true, @value = true })
-
+                    <th scope="col">@Html.ActionLink("Tome Name", "IndexByName", "Tome", new { sortByNameAsc = true }, new { @class = "" })</th>
                 }
-                <input type="submit" value="Name" class="index-menu-categories1" />
+
+                <th scope="col"> @Html.ActionLink("Creation Date", "IndexByDate", "Tome", new { sortByDateAsc = true }, new { @class = "" })</th>
             }
-
-            using (Html.BeginForm("IndexByDate", "Tome", FormMethod.Post))
-            {
-
-                @Html.TextBox("TagId", (String)@ViewBag.TagId, new { @class = "hidden" })
-                @Html.CheckBox("sortByDateAsc",  new { @class = "hidden" , @checked = true, @value = true})
-                <input type="submit" value="Creation Date" class="index-menu-categories2" />
-            }
-        }
-
-        else
-        {
-            if (ViewBag.sortByNameAsc == true)
-            {
-                @Html.ActionLink("Tome Name", "IndexByName", "Tome", new { sortByNameAsc = false }, new { @class = "index-menu-categories1" })
-            }
-            else
-            {
-                @Html.ActionLink("Tome Name", "IndexByName", "Tome", new { sortByNameAsc = true }, new { @class = "index-menu-categories1" })
-            }
-
-            @Html.ActionLink("Creation Date", "IndexByDate", "Tome", new { sortByDateAsc = true }, new { @class = "index-menu-categories2" })
-        }
-    </div>
-
-    <div class="tome-list">
+        </tr>
+        </thead>
+        <tbody>
         @foreach (var tome in ViewBag.Tomes)
-        {<div class="tome-element">
-                @Html.ActionLink(((Tome)tome).Name, "Show", "Tome", new { id = tome.TomeId }, new { @class = "font-weight-bold text-capitalize index-menu-item" })
-                <p class="index-menu-item tome-date">@tome.CreationDate</p>
-            </div>
+        {
+            <tr>
+                <th scope="row">@Html.ActionLink(((Tome)tome).Name, "Show", "Tome", new { id = tome.TomeId }, new { @class = "" })</th>
+                <td>@tome.CreationDate</td>
+            </tr>
         }
-    </div>
+        </tbody>
+    </table>
 
 
 </div>

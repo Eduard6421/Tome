@@ -27,7 +27,7 @@ namespace Tome.Controllers
         {
             var tomes = (from tome in db.Tomes
                          orderby tome.CreationDate
-                         select tome).Take(6);
+                         select tome);
             var tags = (from tag in db.Tags
                         select tag);
 
@@ -49,7 +49,7 @@ namespace Tome.Controllers
             var tomes = (from tome in db.Tomes
                          where tome.Name.Contains(searchedText)
                          orderby tome.CreationDate
-                         select tome).Take(6);
+                         select tome);
 
             String currentUserId = User.Identity.GetUserId();
             ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);

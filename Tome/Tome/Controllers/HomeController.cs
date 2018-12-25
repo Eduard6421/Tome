@@ -28,9 +28,15 @@ namespace Tome.Controllers
                     var tomes = (from tome in db.Tomes
                                  where tome.IsPrivate == false
                                  orderby tome.CreationDate
-                                 select tome).OrderBy(r => Guid.NewGuid()).Take(6).AsEnumerable();
+                                 select tome).OrderBy(r => Guid.NewGuid()).AsEnumerable();
+
+                    var tags = (from tag in db.Tags
+                        select tag);
+                    
+
                     ViewBag.Tomes = tomes.ToList();
                     ViewBag.Count = tomes.Count();
+                    ViewBag.Tags = tags.ToList();
                 }
                 else  // successfully auth user
                 {
@@ -38,15 +44,23 @@ namespace Tome.Controllers
                                     join roles in db.Roles on userroles.RoleId equals roles.Id
                                     where userroles.UserId == currentUserId
                                     select roles.Name).FirstOrDefault();
+
+                    var tags = (from tag in db.Tags
+                        select tag);
+
                     ViewBag.roleAccount = roleName;
+                    ViewBag.Tags = tags.ToList();
                     if (roleName == "Administrator")
                     {
                         // administrator query for get all tomes
                         var tomes = (from tome in db.Tomes
                                      orderby tome.CreationDate
-                                     select tome).OrderBy(r => Guid.NewGuid()).Take(6).AsEnumerable();
+                                     select tome).OrderBy(r => Guid.NewGuid()).AsEnumerable();
+                        
+
                         ViewBag.Tomes = tomes.ToList();
                         ViewBag.Count = tomes.Count();
+                        ViewBag.Tags = tags.ToList();
                     }
                     else
                     {
@@ -55,11 +69,13 @@ namespace Tome.Controllers
                         var tomes = (from tome in db.Tomes
                                      where tome.IsPrivate == false || tome.ApplicationUser.Id == currentUserId
                                      orderby tome.CreationDate
-                                     select tome).OrderBy(r => Guid.NewGuid()).Take(6).AsEnumerable();
+                                     select tome).OrderBy(r => Guid.NewGuid()).AsEnumerable();
+                        
                         Console.WriteLine(tomes);
                         Console.WriteLine(currentUser);
                         ViewBag.Tomes = tomes.ToList();
                         ViewBag.Count = tomes.Count();
+                        ViewBag.Tags = tags.ToList();
                     }
 
                 }

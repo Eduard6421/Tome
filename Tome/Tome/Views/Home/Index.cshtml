@@ -8,9 +8,14 @@
 <link href="~/Content/table.css" rel="stylesheet" />
 
 
+
 <style>
     .thead-dark {
         background-color: #383636;
+    }
+
+    .select-custom {
+        height: 26px;
     }
 </style>
 
@@ -23,34 +28,38 @@
             <tr>
                 <th scope="col">@Html.ActionLink("Tome Name", "IndexByName", "Tome", new { sortByNameAsc = true }, new { @class = "" })</th>
                 <th scope="col">@Html.ActionLink("Creation Date", "IndexByDate", "Tome", new { sortByDateAsc = true }, new { @class = "" })</th>
+                <th scope="col">
+                    <div class="">
+                        @if (ViewBag.Tags.Count > 0)
+                        {
+                            using (Html.BeginForm("IndexByName", "Tome", FormMethod.Post))
+                            {
+                                <select name="TagId" class="custom-select custom-select-lg mb-3 select-custom">
+                                    @foreach (var tag in ViewBag.Tags)
+                                    {
+                                        <option value="@tag.TagId">@tag.TagTitle</option>
+                                    }
+                                </select>
+                                @Html.TextBox("sortByNameAsc", true, new { @class = "hidden" })
+                                <input type="submit" class="btn btn-primary btn-sm search-btn" value="Search for tag" />
+                            }
+                        }
+                    </div>
+                </th>
+                <th>Category</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var tome in ViewBag.Tomes)
-            {
-                <tr>
-                    <th scope="row">@Html.ActionLink(((Tome)tome).Name, "Show", "Tome", new { id = tome.TomeId }, new { @class = "" })</th>
-                    <td>@tome.CreationDate</td>
-                </tr>
-            }
+        @foreach (var tome in ViewBag.Tomes)
+        {
+            <tr>
+                <th scope="row">@Html.ActionLink(((Tome)tome).Name, "Show", "Tome", new { id = tome.TomeId }, new { @class = "" })</th>
+                <td>@tome.CreationDate</td>
+                <td></td>
+                <td></td>
+            </tr>
+        }
         </tbody>
     </table>
-
-
-
-
-
-
-
-    <!--
-    <div class="tome-list">
-        @foreach (var tome in ViewBag.Tomes)
-        {<div class="tome-element">
-             @Html.ActionLink(((Tome)tome).Name, "Show", "Tome", new { id = tome.TomeId }, new { @class = "font-weight-bold text-capitalize index-menu-item" })
-             <p class="index-menu-item tome-date custom-row">@tome.CreationDate</p>
-         </div>
-        }
-    </div>
-    -->
 
 </div>
