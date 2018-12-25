@@ -30,9 +30,17 @@
     }
 </script>
 
-<div class="form-style">
-    @using (Html.BeginForm("Add", "Tome", FormMethod.Post, new { onsubmit = "return upload(this);" }))
+<div class="pb-2 mt-4 mb-2 border border-bottom">
+    <h2>Create a new tome</h2>
+    @if (TempData["Alert"] != null)
     {
+        <div class="alert alert-danger" role="alert">
+            @Html.Raw(TempData["Alert"])
+        </div>
+    }
+</div>
+@using (Html.BeginForm("Add", "Tome", FormMethod.Post, new { onsubmit = "return upload(this);" }))
+{
         <div class="form-group">
             <div class="form-text mb-5">
                 <div class="form-group">

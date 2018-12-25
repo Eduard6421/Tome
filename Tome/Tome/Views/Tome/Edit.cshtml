@@ -46,8 +46,7 @@
     <div class="form-group">
         <div class="form-text mb-5">
             <div class="form-group">
-                <label for="Name" class="col-md-2 control-label">Tome Name</label>
-                @Html.TextBoxFor(m => m.ReferredTome.Name)
+                <label class="text-center" style="font-size: 30px; padding-left: 40%;">@Model.ReferredTome.Name</label>
                 @Html.ValidationMessageFor(m => m.ReferredTome.Name, "", new { @class = "text-danger" })
                 @Html.TextBoxFor(m => m.ReferredTome.TomeId, new { @Value = referredTome, @type = "hidden" })
             </div>
