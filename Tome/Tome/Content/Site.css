@@ -27,7 +27,6 @@ body {
 .form-search {
     margin-top: 11px;
     margin-left: 30.1%;
-
 }
 
 .search-btn {
@@ -40,10 +39,11 @@ body {
 }
 
 .page-title {
-    text-align: center; 
+    text-align: center;
 }
 
 .form-style {
+    margin-top: 5%;
     background-color: white;
     border-width: 3px !important;
     border-style: solid;
@@ -68,10 +68,15 @@ body {
 .label-control-tag {
     text-align: center;
     margin-left: 49%;
-    font-size: 20px;    
+    font-size: 20px;
     padding-bottom: 2%;
     font-weight: 100;
     color: black;
+}
+
+.label-control-checkbox {
+    margin-bottom: 3%;
+    text-align: center;
 }
 
 
@@ -81,3 +86,44 @@ body {
     margin-bottom: 3%;
 }
 
+.no-mouse :hover {
+    cursor: context-menu !important;
+}
+
+    .no-mouse :hover form-check-label {
+        cursor: pointer !important;
+    }
+
+
+.content-control {
+    background-color: white;
+    padding-top: 5%;
+    border-width: 1px !important;
+    border-style: solid;
+    border-color: black;
+    margin-top: 0%;
+
+}
+
+    .content-control h1 {
+        font-size: 2.5vw;
+        text-decoration: underline;
+        text-align: center;
+    }
+
+.content-control-button {
+
+    margin-left: 3%;
+}
+
+
+
+.content-details-control {
+    margin-top: 10%;
+
+}
+
+.btn-control {
+    margin-right: 5px;
+    margin-bottom: 10%;
+}

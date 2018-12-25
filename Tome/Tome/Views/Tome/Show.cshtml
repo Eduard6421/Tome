@@ -6,65 +6,70 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<div class="content-control">
 
+    <h1 class="text-center">@Model.ReferredTome.Name</h1>
 
-<h2 class="text-center">@Model.ReferredTome.Name</h2>
+    <div class="content-details-control">
 
-@if (@Model.ReferredTome.IsPrivate)
-{
-    <h4>This Tome is <span style="color: red;">private</span></h4>
-}
-else
-{
-    <h4>This Tome is <span style="color: green;">public</span></h4>
-}
-<h4>Creation date: @Model.ReferredTome.CreationDate</h4>
-
-
-<!-- User / Moderator / Admin  -->
-@if (Request.IsAuthenticated)
-{
-    if (@ViewBag.roleAccount == "Administrator")
-    {
-        @Html.ActionLink("Edit Tome", "Edit", "Tome", new { @id = Model.ReferredTome.TomeId }, new { @class = "btn btn-primary btn-large" })
-        @Html.ActionLink("History", "Index", "History", new { @id = Model.ReferredTome.TomeId }, new { @class = "btn btn-primary btn-large" })
-        @Html.ActionLink("Delete", "Delete", "Tome", new { @id = Model.ReferredTome.TomeId }, new { @class = "btn btn-primary btn-large" })
-    }
-    else if (@ViewBag.roleAccount == "Moderator")
-    {
-        @Html.ActionLink("Edit Tome", "Edit", "Tome", new { @id = Model.ReferredTome.TomeId }, new { @class = "btn btn-primary btn-large" })
-        @Html.ActionLink("History", "Index", "History", new { @id = Model.ReferredTome.TomeId }, new { @class = "btn btn-primary btn-large" })
-    }
-    else if (@ViewBag.roleAccount == "User")
-    {
-        if (@ViewBag.AuthUser)
+        @if (@Model.ReferredTome.IsPrivate)
         {
-            @Html.ActionLink("Edit Tome", "Edit", "Tome", new { @id = Model.ReferredTome.TomeId }, new { @class = "btn btn-primary btn-large" })
-            @Html.ActionLink("History", "Index", "History", new { @id = Model.ReferredTome.TomeId }, new { @class = "btn btn-primary btn-large" })
+            <h4>This Tome is <span style="color: red;">private</span></h4>
         }
-    }
-
-}
-else
-{
-    <!-- Public | Anonymous Users  -->
-    if (@Model.ReferredTome.IsPrivate == false)
-    {
-        @Html.ActionLink("Edit Tome", "Edit", "Tome", new { @id = Model.ReferredTome.TomeId }, new { @class = "btn btn-primary btn-large" })
-    }
-    else
-    {
-        <!-- Private | Anonymous Users  -->
-    }
-}
+        else
+        {
+            <h4>This Tome is <span style="color: green;">public</span></h4>
+        }
+        <h4>Creation date: @Model.ReferredTome.CreationDate</h4>
 
 
+        <!-- User / Moderator / Admin  -->
+        @if (Request.IsAuthenticated)
+        {
+            if (@ViewBag.roleAccount == "Administrator")
+            {
+                @Html.ActionLink("Edit Tome", "Edit", "Tome", new { @id = Model.ReferredTome.TomeId }, new { @class = "btn btn-primary btn-large btn-control" })
+                @Html.ActionLink("History", "Index", "History", new { @id = Model.ReferredTome.TomeId }, new { @class = "btn btn-primary btn-large btn-control" })
+                @Html.ActionLink("Delete", "Delete", "Tome", new { @id = Model.ReferredTome.TomeId }, new { @class = "btn btn-primary btn-large btn-control" })
+            }
+            else if (@ViewBag.roleAccount == "Moderator")
+            {
+                @Html.ActionLink("Edit Tome", "Edit", "Tome", new { @id = Model.ReferredTome.TomeId }, new { @class = "btn btn-primary btn-large btn-control" })
+                @Html.ActionLink("History", "Index", "History", new { @id = Model.ReferredTome.TomeId }, new { @class = "btn btn-primary btn-large btn-control" })
+            }
+            else if (@ViewBag.roleAccount == "User")
+            {
+                if (@ViewBag.AuthUser)
+                {
+                    @Html.ActionLink("Edit Tome", "Edit", "Tome", new { @id = Model.ReferredTome.TomeId }, new { @class = "btn btn-primary btn-large btn-control" })
+                    @Html.ActionLink("History", "Index", "History", new { @id = Model.ReferredTome.TomeId }, new { @class = "btn btn-primary btn-large btn-control" })
+                }
+            }
+
+        }
+        else
+        {
+            <!-- Public | Anonymous Users  -->
+            if (@Model.ReferredTome.IsPrivate == false)
+            {
+                @Html.ActionLink("Edit Tome", "Edit", "Tome", new { @id = Model.ReferredTome.TomeId }, new { @class = "btn btn-primary btn-large btn-control" })
+            }
+            else
+            {
+                <!-- Private | Anonymous Users  -->
+            }
+        }
 
 
 
-<div style="margin-top: 5%; margin-bottom: 100px;">
-    @Html.Raw(File.ReadAllText(Model.TomeContent.Content))
+
+
+        <div>
+            @Html.Raw(File.ReadAllText(Model.TomeContent.Content))
+        </div>
+
+
+    </div>
+
+
 </div>
-
-
-

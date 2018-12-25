@@ -5,7 +5,7 @@
 }
 
 <h2>@ViewBag.Title.</h2>
-
+<div class="form-style">
 <p class="text-success">@ViewBag.StatusMessage</p>
 @{
     var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes();
@@ -68,3 +68,4 @@
         }
     }
 }
+</div>

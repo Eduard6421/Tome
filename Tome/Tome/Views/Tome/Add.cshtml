@@ -31,7 +31,6 @@
 </script>
 
 <div class="pb-2 mt-4 mb-2 border border-bottom">
-    <h2>Create a new tome</h2>
     @if (TempData["Alert"] != null)
     {
         <div class="alert alert-danger" role="alert">
@@ -39,6 +38,7 @@
         </div>
     }
 </div>
+<div class="form-style">
 @using (Html.BeginForm("Add", "Tome", FormMethod.Post, new { onsubmit = "return upload(this);" }))
 {
         <div class="form-group">
@@ -52,9 +52,9 @@
             <div class="form-check">
                 @if (Request.IsAuthenticated)
                 {
-                    <div class="form-group">
+                    <div class="form-group checkbox-inline form-control label-control-checkbox input-lg no-mouse">
                         @Html.CheckBoxFor(m => m.ReferredTome.IsPrivate)
-                        <label class="form-check-label" for="defaultCheck"> IsPrivate </label>
+                        @Html.LabelFor(m => m.ReferredTome.IsPrivate,"Set Tome as private",new {@class="form-check-label"})
                     </div>
                 }
             </div>
@@ -70,6 +70,8 @@
         </div>
     }
 </div>
+
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script src="~/Scripts/deleteAdvertisment.js"></script>
