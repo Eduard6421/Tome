@@ -327,6 +327,7 @@
     <Content Include="Views\Tome\SearchByTagName.cshtml" />
     <Content Include="Views\Tome\SearchByTagDate.cshtml" />
     <Content Include="Views\Tome\SearchByTag.cshtml" />
+    <Content Include="Views\Error\AccessDenied.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

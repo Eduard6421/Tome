@@ -144,6 +144,7 @@ namespace Tome.Controllers
         }
 
         [HttpGet]
+        [AccessDeniedAuthorize(Roles = "Administrator")]
         public ActionResult ListTags()
         {   
             List<Tag> tagList = new List<Tag>();
@@ -161,6 +162,7 @@ namespace Tome.Controllers
 
 
         [HttpGet]
+        [AccessDeniedAuthorize(Roles = "Administrator")]
         public ActionResult CreateTag()
         {
 
@@ -176,6 +178,7 @@ namespace Tome.Controllers
         }
 
         [HttpPost]
+        [AccessDeniedAuthorize(Roles = "Administrator")]
         public ActionResult CreateTag(Tag newTag)
         {
             try
@@ -201,7 +204,7 @@ namespace Tome.Controllers
             return RedirectToAction("ListTags");
         }
 
-
+        [AccessDeniedAuthorize(Roles = "Administrator")]
         public ActionResult DeleteTag(String id)
         {
             try

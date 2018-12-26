@@ -16,13 +16,13 @@ namespace Tome.Filters
 
             if (!filterContext.HttpContext.User.Identity.IsAuthenticated)
             {
-                filterContext.Result = new RedirectResult("~/Account/Login");
+                filterContext.Result = new RedirectResult("~/Error/AccessDenied");
                 return;
             }
 
             if (filterContext.Result is HttpUnauthorizedResult)
             {
-                filterContext.Result = new RedirectResult("~/Account/Denied");
+                filterContext.Result = new RedirectResult("~/Error/AccessDenied");
             }
 
         }

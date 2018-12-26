@@ -31,6 +31,10 @@ namespace Tome.Controllers
                                         select version.TomeHistoryId).FirstOrDefault();
 
 
+                if (!Request.IsAuthenticated && (db.Tomes.Find(id)).IsPrivate)
+                {
+                    return RedirectToAction("AccessDenied", "Error");
+                }
                 String currentUserId = User.Identity.GetUserId();
                 ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
                 var roleName = (from userroles in db.UserRoles

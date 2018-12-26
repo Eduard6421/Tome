@@ -50,7 +50,7 @@
 
                                     @if (tomeHistory.ApplicationUser == null)
                                     {
-                                        <div class="box-item">
+                                        <div class="box-item color-white">
                                             <strong>Username</strong>: Anonymous user
                                         </div>
                                     }
@@ -82,15 +82,15 @@
 
                                     @if (tomeHistory.ApplicationUser == null)
                                     {
-                                        <div class="box-item">
+                                        <div class="box-item color-white">
                                             <strong>Username</strong>: Anonymous user
                                         </div>
                                     }
                                     else
                                     {
-                                        <div class="box-item"><strong>Username</strong>: @tomeHistory.ApplicationUser.Email</div>
+                                        <div class="box-item color-white"><strong>Username</strong>: @tomeHistory.ApplicationUser.Email</div>
                                     }
-                                    <div class="box-item"><strong>Start Date</strong>: @tomeHistory.ModificationDate.ToString("dd/mm/yyyy hh:mm")</div>
+                                    <div class="box-item color-white"><strong>Start Date</strong>: @tomeHistory.ModificationDate.ToString("dd/mm/yyyy hh:mm")</div>
                                     @if (ViewBag.curentVersion == tomeHistory.Id)
                                     {
                                         <div class="box-item"><strong style="color: green">Current version</strong></div>

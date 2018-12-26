@@ -655,6 +655,12 @@ namespace Tome.Controllers
                             select history.FilePath).SingleOrDefault();
 
 
+                if (!Request.IsAuthenticated && tome.IsPrivate)
+                {
+                    return RedirectToAction("AccessDenied", "Error");
+                }
+
+
                 String tomeContent = System.IO.File.ReadAllText(filePath);
                 editTomeViewModel.ReferredTome = tome;
                 Debug.WriteLine(filePath);
@@ -695,7 +701,8 @@ namespace Tome.Controllers
             {
                 string currentUserId = User.Identity.GetUserId();
                 ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
-
+                
+                
                 Models.Tome tome = db.Tomes.Find(editedTome.ReferredTome.TomeId);
                 tome.CreationDate = DateTime.Now;
                 tome.IsPrivate = editedTome.ReferredTome.IsPrivate;
@@ -711,8 +718,15 @@ namespace Tome.Controllers
                 };
 
 
-                
-                Models.TomeViewModel editTomeViewModel = new TomeViewModel();
+
+                if (!Request.IsAuthenticated && tome.IsPrivate)
+                {
+                    return RedirectToAction("NotFound", "Error");
+                }
+
+
+
+                    Models.TomeViewModel editTomeViewModel = new TomeViewModel();
 
                 var selectedTag = (from tag in db.TagReferences
                                    where tag.TomeId == tome.TomeId
