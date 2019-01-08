@@ -59,7 +59,7 @@
         </div>
         <div class="form-check">
             <!---<input class="form-check-input" type="checkbox" value="" id="defaultCheck" name="IsPrivate">-->
-            @if (Request.IsAuthenticated)
+            @if (ViewBag.canMakeProtected)
             {
                 <div class="form-group checkbox custom-row">
                     @Html.CheckBoxFor(m => m.ReferredTome.IsPrivate, new { @class = "form-control custom-checkbox" })

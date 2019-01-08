@@ -67,6 +67,10 @@ namespace Tome.Controllers
 
             try
             {
+                String roleIdAdmin = (from role in db.Roles
+                    where role.Name == "Administrator"
+                    select role.Id).SingleOrDefault();
+
 
                 String roleId = (from role in db.Roles
                                  where role.Name == "Moderator"
@@ -75,6 +79,12 @@ namespace Tome.Controllers
                 var rol = (from roles in db.UserRoles
                            where roles.UserId == id
                            select roles).FirstOrDefault();
+
+                if (roleIdAdmin == rol.RoleId)
+                {
+                    return RedirectToAction("ListUsers");
+                }
+
 
                 Debug.WriteLine(rol.UserId);
 
@@ -110,6 +120,10 @@ namespace Tome.Controllers
             try
             {
 
+                String roleIdAdmin = (from role in db.Roles
+                    where role.Name == "Administrator"
+                    select role.Id).SingleOrDefault();
+
                 String roleId = (from role in db.Roles
                                  where role.Name == "User"
                                  select role.Id).Single();
@@ -117,6 +131,13 @@ namespace Tome.Controllers
                 var rol = (from roles in db.UserRoles
                            where roles.UserId == id
                            select roles).FirstOrDefault();
+
+
+                if (roleIdAdmin == rol.RoleId)
+                {
+                    return RedirectToAction("ListUsers");
+                }
+
 
                 Debug.WriteLine(rol.UserId);
                 db.UserRoles.Remove(rol);

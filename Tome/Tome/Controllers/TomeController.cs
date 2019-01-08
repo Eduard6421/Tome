@@ -37,6 +37,8 @@ namespace Tome.Controllers
                             join roles in db.Roles on userroles.RoleId equals roles.Id
                             where userroles.UserId == currentUserId
                             select roles.Name).FirstOrDefault();
+
+
             var map = (from tome in db.Tomes
                 join refs in db.TagReferences on tome.TomeId equals refs.TomeId into newjoin
                 from tomesnref in newjoin.DefaultIfEmpty()
@@ -627,6 +629,9 @@ namespace Tome.Controllers
         {
             try
             {
+                ViewBag.canMakeProtected = false;
+
+
                 String filePath;
 
                 Models.Tome tome = db.Tomes.Find(id);
@@ -643,6 +648,15 @@ namespace Tome.Controllers
                 var TagList = new List<SelectListItem>(SelectListItems);
 
                 editTomeViewModel.TagList = TagList;
+
+                ApplicationUser tomeOwner = (from selectedTome in db.Tomes
+                    where selectedTome.TomeId == id
+                    select selectedTome.ApplicationUser).SingleOrDefault();
+
+                if (tomeOwner.Id == User.Identity.GetUserId() || User.IsInRole("Administrator") || User.IsInRole("Moderator"))
+                {
+                    ViewBag.canMakeProtected = true;
+                }
                 
 
                 // Find current version and get the file path
