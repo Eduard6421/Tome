@@ -4,8 +4,15 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+
+<style>
+    .custom-button-padding {
+        margin-left: 10px;
+    }
+</style>
+
 <div style="background-color: white;">
-    @Html.ActionLink("Create Tag", "CreateTag", "Admin", null, new { @class = "btn btn-primary btn-large" })
+    @Html.ActionLink("Create Tag", "CreateTag", "Admin", null, new { @class = "btn btn-primary btn-large custom-button-padding" })
     <h1 class="text-center" style="margin-top: 30px; display: inline-flex; padding-left: 36%;">Tags</h1>
     <table class="table" style="margin-top: 25px; margin-bottom: 100px;">
         <thead>

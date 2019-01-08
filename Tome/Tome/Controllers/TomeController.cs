@@ -715,8 +715,8 @@ namespace Tome.Controllers
             {
                 string currentUserId = User.Identity.GetUserId();
                 ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
-                
-                
+
+
                 Models.Tome tome = db.Tomes.Find(editedTome.ReferredTome.TomeId);
                 tome.CreationDate = DateTime.Now;
                 tome.IsPrivate = editedTome.ReferredTome.IsPrivate;
@@ -739,8 +739,7 @@ namespace Tome.Controllers
                 }
 
 
-
-                    Models.TomeViewModel editTomeViewModel = new TomeViewModel();
+                Models.TomeViewModel editTomeViewModel = new TomeViewModel();
 
                 var selectedTag = (from tag in db.TagReferences
                                    where tag.TomeId == tome.TomeId
@@ -752,13 +751,19 @@ namespace Tome.Controllers
                 var TagList = new List<SelectListItem>(SelectListItems);
 
                 editTomeViewModel.TagList = TagList;
-                
+
                 if (selectedTag != null)
                 {
                     selectedTag.TagId = editedTome.SelectedTag;
                     db.SaveChanges();
                 }
-
+                else
+                {
+                    TagReference newTagRef = new TagReference();
+                    newTagRef.TomeId = editedTome.ReferredTome.TomeId;
+                    newTagRef.TagId = editedTome.SelectedTag;
+                    db.TagReferences.Add(newTagRef);
+                }
 
                 // insert into db
                 db.TomeHistories.Add(tomeHistory);

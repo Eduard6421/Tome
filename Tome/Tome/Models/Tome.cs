@@ -14,7 +14,7 @@ namespace Tome.Models
         public int TomeId { get; set; }
         [Required(ErrorMessage = "Required")]
         [StringLength(30, MinimumLength = 3, ErrorMessage = "Tome name must have at least 3 characters")]
-        [RegularExpression("^[a-zA-Z0-9]*$", ErrorMessage = "Only alphabets and numbers allowed.")]
+        [RegularExpression("^[a-zA-Z0-9 ]*$", ErrorMessage = "Only alphanumeric and space allowed.")]
         public string Name { get; set; }
         [Required]
         public DateTime CreationDate { get; set; }

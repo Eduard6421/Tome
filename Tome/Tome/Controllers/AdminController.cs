@@ -82,6 +82,7 @@ namespace Tome.Controllers
 
                 if (roleIdAdmin == rol.RoleId)
                 {
+                    TempData["errorDemote"] = "true";
                     return RedirectToAction("ListUsers");
                 }
 
@@ -135,6 +136,7 @@ namespace Tome.Controllers
 
                 if (roleIdAdmin == rol.RoleId)
                 {
+                    TempData["errorDemote"] = "true";
                     return RedirectToAction("ListUsers");
                 }
 
@@ -204,18 +206,32 @@ namespace Tome.Controllers
         {
             try
             {
-                newTag.TagTitle = newTag.TagTitle.ToLower();
+                if (ModelState.IsValid)
+                {
+                    newTag.TagTitle = newTag.TagTitle.ToLower();
 
-                db.Tags.Add(newTag);
-                db.SaveChanges();
+                    db.Tags.Add(newTag);
+                    db.SaveChanges();
 
-                String currentUserId = User.Identity.GetUserId();
-                ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
-                var roleName = (from userroles in db.UserRoles
-                    join roles in db.Roles on userroles.RoleId equals roles.Id
-                    where userroles.UserId == currentUserId
-                    select roles.Name).FirstOrDefault();
-                ViewBag.roleAccount = roleName;
+                    String currentUserId = User.Identity.GetUserId();
+                    ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
+                    var roleName = (from userroles in db.UserRoles
+                        join roles in db.Roles on userroles.RoleId equals roles.Id
+                        where userroles.UserId == currentUserId
+                        select roles.Name).FirstOrDefault();
+                    ViewBag.roleAccount = roleName;
+                }
+                else
+                {
+                    String currentUserId = User.Identity.GetUserId();
+                    ApplicationUser currentUser = db.Users.FirstOrDefault(x => x.Id == currentUserId);
+                    var roleName = (from userroles in db.UserRoles
+                        join roles in db.Roles on userroles.RoleId equals roles.Id
+                        where userroles.UserId == currentUserId
+                        select roles.Name).FirstOrDefault();
+                    ViewBag.roleAccount = roleName;
+                    return View(newTag);
+                }
             }
             catch (Exception e)
             {
